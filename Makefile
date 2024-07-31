@@ -3,7 +3,7 @@ SERVICE_NAMES = product-service-app payment-service-app order-service-app user-s
 build:
 	@echo "Building Docker images..."
 	@for service in $(SERVICE_NAMES); do \
-		docker build -t $$service ./microservices/$$service; \
+		docker build -t $$service ./$$service; \
 	done
 up:
 	docker-compose up -d
