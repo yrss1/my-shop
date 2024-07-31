@@ -1,5 +1,11 @@
 package repository
 
+import (
+	"github.com/yrss1/my-shop/tree/main/user/internal/domain/user"
+	"github.com/yrss1/my-shop/tree/main/user/internal/repository/postgres"
+	"github.com/yrss1/my-shop/tree/main/user/pkg/store"
+)
+
 type Configuration func(r *Repository) error
 
 type Repository struct {

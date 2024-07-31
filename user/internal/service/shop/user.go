@@ -4,6 +4,8 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/yrss1/my-shop/tree/main/user/internal/domain/user"
+	"github.com/yrss1/my-shop/tree/main/user/pkg/store"
 )
 
 func (s *Service) ListUsers(ctx context.Context) (res []user.Response, err error) {

@@ -2,6 +2,9 @@ package repository
 
 import (
 	"fmt"
+	"github.com/yrss1/my-shop/tree/main/product/internal/domain/product"
+	"github.com/yrss1/my-shop/tree/main/product/internal/repository/postgres"
+	"github.com/yrss1/my-shop/tree/main/product/pkg/store"
 )
 
 type Configuration func(r *Repository) error

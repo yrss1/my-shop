@@ -1,5 +1,10 @@
 package epayment
 
+import (
+	"github.com/yrss1/my-shop/tree/main/payment/internal/domain/payment"
+	"github.com/yrss1/my-shop/tree/main/payment/internal/provider/epay"
+)
+
 type Configuration func(s *Service) error
 
 type Service struct {

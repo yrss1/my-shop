@@ -4,7 +4,8 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"my-shop/product/internal/domain/product"
+	"github.com/yrss1/my-shop/tree/main/product/internal/domain/product"
+	"github.com/yrss1/my-shop/tree/main/product/pkg/store"
 )
 
 func (s *Service) ListProducts(ctx context.Context) (res []product.Response, err error) {

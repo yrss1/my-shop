@@ -3,6 +3,11 @@ package http
 import (
 	"errors"
 	"github.com/gin-gonic/gin"
+	"github.com/yrss1/my-shop/tree/main/product/internal/domain/product"
+	"github.com/yrss1/my-shop/tree/main/product/internal/service/shop"
+	"github.com/yrss1/my-shop/tree/main/product/pkg/helpers"
+	"github.com/yrss1/my-shop/tree/main/product/pkg/server/response"
+	"github.com/yrss1/my-shop/tree/main/product/pkg/store"
 )
 
 type ProductHandler struct {
