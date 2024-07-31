@@ -1,0 +1,222 @@
+definitions:
+  product.Request:
+    properties:
+      category:
+        type: string
+      description:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      price:
+        type: number
+      quantity:
+        type: integer
+    type: object
+  product.Response:
+    properties:
+      category:
+        type: string
+      description:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      price:
+        type: number
+      quantity:
+        type: integer
+    type: object
+  response.Object:
+    properties:
+      data: {}
+      message:
+        type: string
+      success:
+        type: boolean
+    type: object
+info:
+  contact: {}
+paths:
+  /:
+    get:
+      consumes:
+      - application/json
+      description: Get all products
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/product.Response'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Object'
+      summary: List products
+      tags:
+      - products
+    post:
+      consumes:
+      - application/json
+      description: Add a new product
+      parameters:
+      - description: Product request
+        in: body
+        name: product
+        required: true
+        schema:
+          $ref: '#/definitions/product.Request'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/product.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Object'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Object'
+      summary: Add a product
+      tags:
+      - products
+  /{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete product by ID
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Product deleted
+          schema:
+            type: string
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.Object'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Object'
+      summary: Delete a product
+      tags:
+      - products
+    get:
+      consumes:
+      - application/json
+      description: Get product by ID
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/product.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.Object'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Object'
+      summary: Get a product
+      tags:
+      - products
+    put:
+      consumes:
+      - application/json
+      description: Update product by ID
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Product request
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/product.Request'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Object'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.Object'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Object'
+      summary: Update a product
+      tags:
+      - products
+  /search:
+    get:
+      consumes:
+      - application/json
+      description: Search products by name or email
+      parameters:
+      - description: Name
+        in: query
+        name: name
+        type: string
+      - description: Category
+        in: query
+        name: category
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/product.Response'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Object'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Object'
+      summary: Search products
+      tags:
+      - products
+swagger: "2.0"

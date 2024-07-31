@@ -1,0 +1,222 @@
+definitions:
+  payment.Request:
+    properties:
+      amount:
+        type: string
+      id:
+        type: string
+      order_id:
+        type: string
+      status:
+        type: string
+      user_id:
+        type: string
+    type: object
+  payment.Response:
+    properties:
+      amount:
+        type: string
+      id:
+        type: string
+      order_id:
+        type: string
+      status:
+        type: string
+      user_id:
+        type: string
+    type: object
+  response.Object:
+    properties:
+      data: {}
+      message:
+        type: string
+      success:
+        type: boolean
+    type: object
+info:
+  contact: {}
+paths:
+  /:
+    get:
+      consumes:
+      - application/json
+      description: Get all payments
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/payment.Response'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Object'
+      summary: List payments
+      tags:
+      - payments
+    post:
+      consumes:
+      - application/json
+      description: Add a new payment
+      parameters:
+      - description: Payment request
+        in: body
+        name: payment
+        required: true
+        schema:
+          $ref: '#/definitions/payment.Request'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/payment.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Object'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Object'
+      summary: Add a payment
+      tags:
+      - payments
+  /{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete payment by ID
+      parameters:
+      - description: Payment ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Payment deleted
+          schema:
+            type: string
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.Object'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Object'
+      summary: Delete a payment
+      tags:
+      - payments
+    get:
+      consumes:
+      - application/json
+      description: Get payment by ID
+      parameters:
+      - description: Payment ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/payment.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.Object'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Object'
+      summary: Get a payment
+      tags:
+      - payments
+    put:
+      consumes:
+      - application/json
+      description: Update payment by ID
+      parameters:
+      - description: Payment ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Payment request
+        in: body
+        name: payment
+        required: true
+        schema:
+          $ref: '#/definitions/payment.Request'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Object'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.Object'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Object'
+      summary: Update a payment
+      tags:
+      - payments
+  /search:
+    get:
+      consumes:
+      - application/json
+      description: Search payments by user ID or order ID
+      parameters:
+      - description: User ID
+        in: query
+        name: userId
+        type: string
+      - description: Order ID
+        in: query
+        name: orderId
+        type: string
+      - description: Status
+        in: query
+        name: status
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/payment.Response'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Object'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Object'
+      summary: Search payments
+      tags:
+      - payments
+swagger: "2.0"

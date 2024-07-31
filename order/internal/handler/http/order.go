@@ -33,6 +33,15 @@ func (h *OrderHandler) Routes(r *gin.RouterGroup) {
 	}
 }
 
+// list godoc
+// @Summary List orders
+// @Description Get all orders
+// @Tags orders
+// @Accept  json
+// @Produce  json
+// @Success 200 {array} order.Response
+// @Failure 500 {object} response.Object
+// @Router / [get]
 func (h *OrderHandler) list(c *gin.Context) {
 	res, err := h.shopService.ListOrders(c)
 	if err != nil {
@@ -43,6 +52,17 @@ func (h *OrderHandler) list(c *gin.Context) {
 	response.OK(c, res)
 }
 
+// add godoc
+// @Summary Add an order
+// @Description Add a new order
+// @Tags orders
+// @Accept  json
+// @Produce  json
+// @Param order body order.Request true "Order request"
+// @Success 200 {object} order.Response
+// @Failure 400 {object} response.Object
+// @Failure 500 {object} response.Object
+// @Router / [post]
 func (h *OrderHandler) add(c *gin.Context) {
 	req := order.Request{}
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -54,7 +74,6 @@ func (h *OrderHandler) add(c *gin.Context) {
 		return
 	}
 	// нужно добавить проверку на продукты
-
 	res, err := h.shopService.CreateOrder(c, req)
 	if err != nil {
 		response.InternalServerError(c, err)
@@ -64,6 +83,17 @@ func (h *OrderHandler) add(c *gin.Context) {
 	response.OK(c, res)
 }
 
+// get godoc
+// @Summary Get an order
+// @Description Get order by ID
+// @Tags orders
+// @Accept  json
+// @Produce  json
+// @Param id path string true "Order ID"
+// @Success 200 {object} order.Response
+// @Failure 404 {object} response.Object
+// @Failure 500 {object} response.Object
+// @Router /{id} [get]
 func (h *OrderHandler) get(c *gin.Context) {
 	id := c.Param("id")
 
@@ -81,6 +111,19 @@ func (h *OrderHandler) get(c *gin.Context) {
 	response.OK(c, res)
 }
 
+// update godoc
+// @Summary Update an order
+// @Description Update order by ID
+// @Tags orders
+// @Accept  json
+// @Produce  json
+// @Param id path string true "Order ID"
+// @Param order body order.Request true "Order request"
+// @Success 200 {string} string "ok"
+// @Failure 400 {object} response.Object
+// @Failure 404 {object} response.Object
+// @Failure 500 {object} response.Object
+// @Router /{id} [put]
 func (h *OrderHandler) update(c *gin.Context) {
 	id := c.Param("id")
 	req := order.Request{}
@@ -108,6 +151,17 @@ func (h *OrderHandler) update(c *gin.Context) {
 	response.OK(c, "ok")
 }
 
+// delete godoc
+// @Summary Delete an order
+// @Description Delete order by ID
+// @Tags orders
+// @Accept  json
+// @Produce  json
+// @Param id path string true "Order ID"
+// @Success 200 {string} string "Order deleted"
+// @Failure 404 {object} response.Object
+// @Failure 500 {object} response.Object
+// @Router /{id} [delete]
 func (h *OrderHandler) delete(c *gin.Context) {
 	id := c.Param("id")
 
@@ -124,6 +178,18 @@ func (h *OrderHandler) delete(c *gin.Context) {
 	response.OK(c, id)
 }
 
+// search godoc
+// @Summary Search orders
+// @Description Search orders by user ID or status
+// @Tags orders
+// @Accept  json
+// @Produce  json
+// @Param userId query string false "User ID"
+// @Param status query string false "Status"
+// @Success 200 {array} order.Response
+// @Failure 400 {object} response.Object
+// @Failure 500 {object} response.Object
+// @Router /search [get]
 func (h *OrderHandler) search(c *gin.Context) {
 	req := order.Request{
 		UserID: helpers.GetStringPtr(c.Query("userId")),

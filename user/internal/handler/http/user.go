@@ -33,6 +33,15 @@ func (h *UserHandler) Routes(r *gin.RouterGroup) {
 	}
 }
 
+// list godoc
+// @Summary List users
+// @Description Get all users
+// @Tags users
+// @Accept  json
+// @Produce  json
+// @Success 200 {array} user.Response
+// @Failure 500 {object} response.Object
+// @Router / [get]
 func (h *UserHandler) list(c *gin.Context) {
 	res, err := h.shopService.ListUsers(c)
 	if err != nil {
@@ -43,6 +52,17 @@ func (h *UserHandler) list(c *gin.Context) {
 	response.OK(c, res)
 }
 
+// add godoc
+// @Summary Add a user
+// @Description Add a new user
+// @Tags users
+// @Accept  json
+// @Produce  json
+// @Param user body user.Request true "User request"
+// @Success 200 {object} user.Response
+// @Failure 400 {object} response.Object
+// @Failure 500 {object} response.Object
+// @Router / [post]
 func (h *UserHandler) add(c *gin.Context) {
 	req := user.Request{}
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -63,6 +83,17 @@ func (h *UserHandler) add(c *gin.Context) {
 	response.OK(c, res)
 }
 
+// get godoc
+// @Summary Get a user
+// @Description Get user by ID
+// @Tags users
+// @Accept  json
+// @Produce  json
+// @Param id path string true "User ID"
+// @Success 200 {object} user.Response
+// @Failure 404 {object} response.Object
+// @Failure 500 {object} response.Object
+// @Router /{id} [get]
 func (h *UserHandler) get(c *gin.Context) {
 	id := c.Param("id")
 
@@ -80,6 +111,19 @@ func (h *UserHandler) get(c *gin.Context) {
 	response.OK(c, res)
 }
 
+// update godoc
+// @Summary Update a user
+// @Description Update user by ID
+// @Tags users
+// @Accept  json
+// @Produce  json
+// @Param id path string true "User ID"
+// @Param user body user.Request true "User request"
+// @Success 200 {string} string "ok"
+// @Failure 400 {object} response.Object
+// @Failure 404 {object} response.Object
+// @Failure 500 {object} response.Object
+// @Router /{id} [put]
 func (h *UserHandler) update(c *gin.Context) {
 	id := c.Param("id")
 	req := user.Request{}
@@ -107,6 +151,17 @@ func (h *UserHandler) update(c *gin.Context) {
 	response.OK(c, "ok")
 }
 
+// delete godoc
+// @Summary Delete a user
+// @Description Delete user by ID
+// @Tags users
+// @Accept  json
+// @Produce  json
+// @Param id path string true "User ID"
+// @Success 200 {string} string "User deleted"
+// @Failure 404 {object} response.Object
+// @Failure 500 {object} response.Object
+// @Router /{id} [delete]
 func (h *UserHandler) delete(c *gin.Context) {
 	id := c.Param("id")
 
@@ -123,6 +178,18 @@ func (h *UserHandler) delete(c *gin.Context) {
 	response.OK(c, id)
 }
 
+// search godoc
+// @Summary Search users
+// @Description Search users by name or email
+// @Tags users
+// @Accept  json
+// @Produce  json
+// @Param name query string false "Name"
+// @Param email query string false "Email"
+// @Success 200 {array} user.Response
+// @Failure 400 {object} response.Object
+// @Failure 500 {object} response.Object
+// @Router /search [get]
 func (h *UserHandler) search(c *gin.Context) {
 	req := user.Request{
 		Name:  helpers.GetStringPtr(c.Query("name")),

@@ -36,6 +36,15 @@ func (h *PaymentHandler) Routes(r *gin.RouterGroup) {
 	}
 }
 
+// list godoc
+// @Summary List payments
+// @Description Get all payments
+// @Tags payments
+// @Accept  json
+// @Produce  json
+// @Success 200 {array} payment.Response
+// @Failure 500 {object} response.Object
+// @Router / [get]
 func (h *PaymentHandler) list(c *gin.Context) {
 	res, err := h.epayService.ListPayments(c)
 	if err != nil {
@@ -46,6 +55,17 @@ func (h *PaymentHandler) list(c *gin.Context) {
 	response.OK(c, res)
 }
 
+// add godoc
+// @Summary Add a payment
+// @Description Add a new payment
+// @Tags payments
+// @Accept  json
+// @Produce  json
+// @Param payment body payment.Request true "Payment request"
+// @Success 200 {object} payment.Response
+// @Failure 400 {object} response.Object
+// @Failure 500 {object} response.Object
+// @Router / [post]
 func (h *PaymentHandler) add(c *gin.Context) {
 	req := payment.Request{}
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -68,6 +88,7 @@ func (h *PaymentHandler) add(c *gin.Context) {
 	token, err := h.epayService.GetToken(c, &epayReq)
 	if err != nil {
 		response.InternalServerError(c, err)
+		return
 	}
 
 	payRes, err := h.epayService.Pay(c, token, &epayReq)
@@ -87,10 +108,22 @@ func (h *PaymentHandler) add(c *gin.Context) {
 	res, err := h.epayService.CreatePayment(c, req)
 	if err != nil {
 		response.InternalServerError(c, err)
+		return
 	}
 	response.OK(c, res)
 }
 
+// get godoc
+// @Summary Get a payment
+// @Description Get payment by ID
+// @Tags payments
+// @Accept  json
+// @Produce  json
+// @Param id path string true "Payment ID"
+// @Success 200 {object} payment.Response
+// @Failure 404 {object} response.Object
+// @Failure 500 {object} response.Object
+// @Router /{id} [get]
 func (h *PaymentHandler) get(c *gin.Context) {
 	id := c.Param("id")
 
@@ -108,6 +141,19 @@ func (h *PaymentHandler) get(c *gin.Context) {
 	response.OK(c, res)
 }
 
+// update godoc
+// @Summary Update a payment
+// @Description Update payment by ID
+// @Tags payments
+// @Accept  json
+// @Produce  json
+// @Param id path string true "Payment ID"
+// @Param payment body payment.Request true "Payment request"
+// @Success 200 {string} string "ok"
+// @Failure 400 {object} response.Object
+// @Failure 404 {object} response.Object
+// @Failure 500 {object} response.Object
+// @Router /{id} [put]
 func (h *PaymentHandler) update(c *gin.Context) {
 	id := c.Param("id")
 	req := payment.Request{}
@@ -135,6 +181,17 @@ func (h *PaymentHandler) update(c *gin.Context) {
 	response.OK(c, "ok")
 }
 
+// delete godoc
+// @Summary Delete a payment
+// @Description Delete payment by ID
+// @Tags payments
+// @Accept  json
+// @Produce  json
+// @Param id path string true "Payment ID"
+// @Success 200 {string} string "Payment deleted"
+// @Failure 404 {object} response.Object
+// @Failure 500 {object} response.Object
+// @Router /{id} [delete]
 func (h *PaymentHandler) delete(c *gin.Context) {
 	id := c.Param("id")
 
@@ -151,6 +208,19 @@ func (h *PaymentHandler) delete(c *gin.Context) {
 	response.OK(c, id)
 }
 
+// search godoc
+// @Summary Search payments
+// @Description Search payments by user ID or order ID
+// @Tags payments
+// @Accept  json
+// @Produce  json
+// @Param userId query string false "User ID"
+// @Param orderId query string false "Order ID"
+// @Param status query string false "Status"
+// @Success 200 {array} payment.Response
+// @Failure 400 {object} response.Object
+// @Failure 500 {object} response.Object
+// @Router /search [get]
 func (h *PaymentHandler) search(c *gin.Context) {
 	req := payment.Request{
 		UserID:  helpers.GetStringPtr(c.Query("userId")),
