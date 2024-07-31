@@ -5,6 +5,7 @@ import (
 	"flag"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/yrss1/my-shop/tree/main/api-gateway/intrenal/config"
 	"io"
 	"net/http"
 	"os"

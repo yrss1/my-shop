@@ -4,6 +4,8 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/yrss1/my-shop/tree/main/order/internal/domain/order"
+	"github.com/yrss1/my-shop/tree/main/order/pkg/store"
 )
 
 func (s *Service) ListOrders(ctx context.Context) (res []order.Response, err error) {

@@ -1,5 +1,7 @@
 package shop
 
+import "github.com/yrss1/my-shop/tree/main/order/internal/domain/order"
+
 type Configuration func(s *Service) error
 
 type Service struct {

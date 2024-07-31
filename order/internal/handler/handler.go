@@ -2,6 +2,10 @@ package handler
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/yrss1/my-shop/tree/main/order/internal/config"
+	"github.com/yrss1/my-shop/tree/main/order/internal/handler/http"
+	"github.com/yrss1/my-shop/tree/main/order/internal/service/shop"
+	"github.com/yrss1/my-shop/tree/main/order/pkg/server/router"
 )
 
 type Dependencies struct {
