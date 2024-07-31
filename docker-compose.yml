@@ -1,0 +1,114 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:13
+    container_name: microservices-postgres
+    environment:
+      POSTGRES_DB: "${POSTGRES_DB}"
+      POSTGRES_USER: "${POSTGRES_USER}"
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
+    ports:
+      - "5432:5432"
+    networks:
+      - backend
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  user:
+    image: user-service-app
+    container_name: user-service-app
+    ports:
+      - "${PORT_USER}:${PORT_USER}"
+    networks:
+      - backend
+    env_file:
+      - .env
+    build:
+      context: ./user
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    depends_on:
+      - postgres
+
+  product:
+    image: product-service-app
+    container_name: product-service-app
+    ports:
+      - "${PORT_PRODUCT}:${PORT_PRODUCT}"
+    networks:
+      - backend
+    env_file:
+      - .env
+    build:
+      context: ./product
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    depends_on:
+      - postgres
+      - user
+
+  order:
+    image: order-service-app
+    container_name: order-service-app
+    ports:
+      - "${PORT_ORDER}:${PORT_ORDER}"
+    networks:
+      - backend
+    env_file:
+      - .env
+    build:
+      context: ./order
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    depends_on:
+      - postgres
+      - user
+      - product
+
+  payment:
+    image: payment-service-app
+    container_name: payment-service-app
+    ports:
+      - "${PORT_PAYMENT}:${PORT_PAYMENT}"
+    networks:
+      - backend
+    env_file:
+      - .env
+    build:
+      context: ./payment
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    depends_on:
+      - postgres
+      - user
+      - product
+      - order
+
+  api-gateway:
+    image: api-gateway-service-app
+    container_name: api_gateway-service-app
+    ports:
+      - "${PORT_API_GATEWAY}:${PORT_API_GATEWAY}"
+    networks:
+      - backend
+    env_file:
+      - .env
+    build:
+      context: ./api-gateway
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    depends_on:
+      - postgres
+      - user
+      - product
+      - order
+      - payment
+
+networks:
+  backend:
+    driver: bridge
+
+volumes:
+  postgres-data:
