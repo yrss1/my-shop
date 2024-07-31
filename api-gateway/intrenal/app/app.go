@@ -68,13 +68,18 @@ func registerRoutes(r *gin.Engine, basePath, target string) {
 	r.Any(basePath+"/*path", proxy(basePath, target))
 }
 
+// proxy возвращает обработчик для проксирования запросов к целевому серверу
 func proxy(basePath, target string) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		// Получаем полный путь запроса
 		originalPath := c.Param("path")
+		// Удаляем базовый путь из исходного запроса
 		trimmedPath := strings.TrimPrefix(originalPath, strings.TrimPrefix(basePath, "/"))
+		// Формируем целевой URL с новым путем
 		targetURL := fmt.Sprintf("%s/api/v1/%s?%s", target, trimmedPath, c.Request.URL.RawQuery)
 		fmt.Printf("Proxying request to: %s\n", targetURL) // Логирование целевого URL
 
+		// Создаем новый запрос
 		req, err := http.NewRequest(c.Request.Method, targetURL, c.Request.Body)
 		if err != nil {
 			c.JSON(http.StatusBadGateway, gin.H{"error": err.Error()})
@@ -83,6 +88,7 @@ func proxy(basePath, target string) gin.HandlerFunc {
 
 		req.Header = c.Request.Header
 
+		// Выполняем запрос к целевому серверу
 		client := &http.Client{}
 		resp, err := client.Do(req)
 		if err != nil {
@@ -91,14 +97,17 @@ func proxy(basePath, target string) gin.HandlerFunc {
 		}
 		defer resp.Body.Close()
 
+		// Перенаправляем заголовки ответа
 		for key, values := range resp.Header {
 			for _, value := range values {
 				c.Writer.Header().Add(key, value)
 			}
 		}
 
+		// Перенаправляем статус-код ответа
 		c.Writer.WriteHeader(resp.StatusCode)
 
+		// Копируем тело ответа
 		_, err = io.Copy(c.Writer, resp.Body)
 		if err != nil {
 			c.JSON(http.StatusBadGateway, gin.H{"error": err.Error()})
