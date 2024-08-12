@@ -9,6 +9,8 @@ import (
 	"github.com/yrss1/my-shop/tree/main/user/internal/handler/http"
 	"github.com/yrss1/my-shop/tree/main/user/internal/service/shop"
 	"github.com/yrss1/my-shop/tree/main/user/pkg/server/router"
+	"log"
+	"net"
 )
 
 type Dependencies struct {
@@ -50,6 +52,27 @@ func WithHTTPHandler() Configuration {
 		{
 			userHandler.Routes(api)
 		}
+		return
+	}
+}
+
+func WithGRPCHandler() Configuration {
+	return func(h *Handler) (err error) {
+		// Register gRPC service
+		proto.RegisterUserServiceServer(h.GRPCServer, NewUserService(h.dependencies.ShopService))
+
+		// Start gRPC server
+		go func() {
+			lis, err := net.Listen("tcp", ":50051") // Use your desired port
+			if err != nil {
+				log.Fatalf("Failed to listen: %v", err)
+			}
+			log.Println("gRPC server listening on port 50051")
+			if err := h.GRPCServer.Serve(lis); err != nil {
+				log.Fatalf("Failed to serve: %v", err)
+			}
+		}()
+
 		return
 	}
 }

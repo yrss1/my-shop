@@ -47,7 +47,10 @@ func Run() {
 		return
 	}
 
-	servers, err := server.New(server.WithHTTPServer(handlers.HTTP, configs.APP.Port))
+	servers, err := server.New(
+		server.WithHTTPServer(handlers.HTTP, configs.APP.Port),
+		server.WithGRPCServer(configs.APP.Port),
+	)
 	if err != nil {
 		fmt.Printf("ERR_RUN_SERVERS: %v", err)
 		return

@@ -3,6 +3,7 @@ package server
 import (
 	"context"
 	"fmt"
+	"google.golang.org/grpc"
 	"net"
 	"net/http"
 )
@@ -10,6 +11,7 @@ import (
 type Server struct {
 	http     *http.Server
 	listener net.Listener
+	grpc     *grpc.Server
 }
 
 type Configuration func(s *Server) error
@@ -28,7 +30,16 @@ func (s *Server) Run() (err error) {
 	if s.http != nil {
 		go func() {
 			if err = s.http.ListenAndServe(); err != nil {
-				fmt.Printf("Error running: %v", err)
+				fmt.Printf("ERR_SERVE_HTTP: %v\n", err)
+				return
+			}
+		}()
+	}
+
+	if s.grpc != nil {
+		go func() {
+			if err = s.grpc.Serve(s.listener); err != nil {
+				fmt.Printf("ERR_SERVE_GRPC: %v\n", err)
 				return
 			}
 		}()
@@ -42,9 +53,9 @@ func (s *Server) Stop(ctx context.Context) (err error) {
 		}
 	}
 
-	//if s.grpc != nil {
-	//	s.grpc.GracefulStop()
-	//}
+	if s.grpc != nil {
+		s.grpc.GracefulStop()
+	}
 
 	return
 }
@@ -55,5 +66,17 @@ func WithHTTPServer(handler http.Handler, port string) Configuration {
 			Handler: handler,
 		}
 		return nil
+	}
+}
+
+func WithGRPCServer(port string) Configuration {
+	return func(s *Server) (err error) {
+		s.listener, err = net.Listen("tcp", fmt.Sprintf("localhost:%s", port))
+		if err != nil {
+			return
+		}
+		s.grpc = &grpc.Server{}
+
+		return
 	}
 }

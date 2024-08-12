@@ -10,10 +10,11 @@ import (
 )
 
 const (
-	defaultAppMode    = "dev"
-	defaultAppPort    = "8080"
-	defaultAppPath    = "/"
-	defaultAppTimeout = 60 * time.Second
+	defaultAppMode     = "dev"
+	defaultAppPort     = "8004"
+	defaultAppGRPCPort = "9004"
+	defaultAppPath     = "/"
+	defaultAppTimeout  = 60 * time.Second
 )
 
 type (
@@ -24,10 +25,11 @@ type (
 	}
 
 	AppConfig struct {
-		Mode    string `required:"true"`
-		Port    string
-		Path    string
-		Timeout time.Duration
+		Mode     string `required:"true"`
+		Port     string
+		GRPCPort string
+		Path     string
+		Timeout  time.Duration
 	}
 
 	StoreConfig struct {
@@ -51,10 +53,11 @@ func New() (cfg Configs, err error) {
 	godotenv.Load(filepath.Join(root, ".env"))
 
 	cfg.APP = AppConfig{
-		Mode:    defaultAppMode,
-		Port:    defaultAppPort,
-		Path:    defaultAppPath,
-		Timeout: defaultAppTimeout,
+		Mode:     defaultAppMode,
+		Port:     defaultAppPort,
+		GRPCPort: defaultAppGRPCPort,
+		Path:     defaultAppPath,
+		Timeout:  defaultAppTimeout,
 	}
 
 	if err = envconfig.Process("APP", &cfg.APP); err != nil {
