@@ -35,7 +35,9 @@ func Run() {
 		fmt.Printf("ERR_INIT_SHOP_SERVICE: %v", err)
 		return
 	}
-
+	fmt.Println("--------------------------------")
+	fmt.Println(configs.APP.GRPCPort)
+	fmt.Println("--------------------------------")
 	handlers, err := handler.New(
 		handler.Dependencies{
 			Configs:     configs,
@@ -50,7 +52,7 @@ func Run() {
 
 	servers, err := server.New(
 		server.WithHTTPServer(handlers.HTTP, configs.APP.Port),
-		server.WithGRPCServer(handlers.GRPCServer, configs.APP.Port),
+		server.WithGRPCServer(handlers.GRPCServer, configs.APP.GRPCPort),
 	)
 	if err != nil {
 		fmt.Printf("ERR_RUN_SERVERS: %v", err)
