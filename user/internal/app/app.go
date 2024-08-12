@@ -41,7 +41,8 @@ func Run() {
 			Configs:     configs,
 			ShopService: shopService,
 		},
-		handler.WithHTTPHandler())
+		handler.WithHTTPHandler(),
+		handler.WithGRPCHandler())
 	if err != nil {
 		fmt.Printf("ERR_INIT_HANDLERS: %v", err)
 		return
@@ -49,7 +50,7 @@ func Run() {
 
 	servers, err := server.New(
 		server.WithHTTPServer(handlers.HTTP, configs.APP.Port),
-		server.WithGRPCServer(configs.APP.Port),
+		server.WithGRPCServer(handlers.GRPCServer, configs.APP.Port),
 	)
 	if err != nil {
 		fmt.Printf("ERR_RUN_SERVERS: %v", err)
@@ -60,6 +61,7 @@ func Run() {
 		return
 	}
 	fmt.Println("http server started on http://localhost:" + configs.APP.Port)
+	fmt.Println("grpc server started on http://localhost:" + configs.APP.GRPCPort)
 
 	var wait time.Duration
 	flag.DurationVar(&wait, "graceful-timeout", time.Second*15, "the duration for which the httpServer gracefully wait for existing connections to finish - e.g. 15s or 1m")

@@ -69,14 +69,14 @@ func WithHTTPServer(handler http.Handler, port string) Configuration {
 	}
 }
 
-func WithGRPCServer(port string) Configuration {
+func WithGRPCServer(grpcServer *grpc.Server, port string) Configuration {
 	return func(s *Server) (err error) {
 		s.listener, err = net.Listen("tcp", fmt.Sprintf("localhost:%s", port))
 		if err != nil {
 			return
 		}
-		s.grpc = &grpc.Server{}
-
+		s.grpc = grpcServer
+		fmt.Println(s.grpc.GetServiceInfo())
 		return
 	}
 }

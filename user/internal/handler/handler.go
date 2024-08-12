@@ -6,11 +6,12 @@ import (
 	ginSwagger "github.com/swaggo/gin-swagger"
 	"github.com/yrss1/my-shop/tree/main/user/docs"
 	"github.com/yrss1/my-shop/tree/main/user/internal/config"
+	"github.com/yrss1/my-shop/tree/main/user/internal/handler/grpc_handler"
 	"github.com/yrss1/my-shop/tree/main/user/internal/handler/http"
 	"github.com/yrss1/my-shop/tree/main/user/internal/service/shop"
-	"github.com/yrss1/my-shop/tree/main/user/pb"
-	"log"
-	"net"
+	pb "github.com/yrss1/my-shop/tree/main/user/pb"
+	"github.com/yrss1/my-shop/tree/main/user/pkg/server/router"
+	"google.golang.org/grpc"
 )
 
 type Dependencies struct {
@@ -21,6 +22,7 @@ type Dependencies struct {
 type Handler struct {
 	dependencies Dependencies
 	HTTP         *gin.Engine
+	GRPCServer   *grpc.Server
 }
 type Configuration func(h *Handler) error
 
@@ -28,6 +30,7 @@ func New(d Dependencies, configs ...Configuration) (h *Handler, err error) {
 	h = &Handler{
 		dependencies: d,
 		HTTP:         router.New(),
+		GRPCServer:   grpc.NewServer(),
 	}
 
 	for _, cfg := range configs {
@@ -58,21 +61,7 @@ func WithHTTPHandler() Configuration {
 
 func WithGRPCHandler() Configuration {
 	return func(h *Handler) (err error) {
-		// Register gRPC service
-		pb.RegisterUserServiceServer()
-		grpc.RegisterUserServiceServer(h.GRPCServer, NewUserService(h.dependencies.ShopService))
-		// Start gRPC server
-		go func() {
-			lis, err := net.Listen("tcp", ":50051") // Use your desired port
-			if err != nil {
-				log.Fatalf("Failed to listen: %v", err)
-			}
-			log.Println("gRPC server listening on port 50051")
-			if err := h.GRPCServer.Serve(lis); err != nil {
-				log.Fatalf("Failed to serve: %v", err)
-			}
-		}()
-
+		pb.RegisterUserServiceServer(h.GRPCServer, grpc_handler.NewUserServiceServer(h.dependencies.ShopService))
 		return
 	}
 }
