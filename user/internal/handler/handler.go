@@ -8,7 +8,7 @@ import (
 	"github.com/yrss1/my-shop/tree/main/user/internal/config"
 	"github.com/yrss1/my-shop/tree/main/user/internal/handler/http"
 	"github.com/yrss1/my-shop/tree/main/user/internal/service/shop"
-	"github.com/yrss1/my-shop/tree/main/user/pkg/server/router"
+	"github.com/yrss1/my-shop/tree/main/user/pb"
 	"log"
 	"net"
 )
@@ -59,8 +59,8 @@ func WithHTTPHandler() Configuration {
 func WithGRPCHandler() Configuration {
 	return func(h *Handler) (err error) {
 		// Register gRPC service
-		proto.RegisterUserServiceServer(h.GRPCServer, NewUserService(h.dependencies.ShopService))
-
+		pb.RegisterUserServiceServer()
+		grpc.RegisterUserServiceServer(h.GRPCServer, NewUserService(h.dependencies.ShopService))
 		// Start gRPC server
 		go func() {
 			lis, err := net.Listen("tcp", ":50051") // Use your desired port
