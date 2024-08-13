@@ -8,7 +8,9 @@ import (
 	"github.com/yrss1/my-shop/tree/main/user/internal/handler"
 	"github.com/yrss1/my-shop/tree/main/user/internal/repository"
 	"github.com/yrss1/my-shop/tree/main/user/internal/service/shop"
+	"github.com/yrss1/my-shop/tree/main/user/pkg/log"
 	"github.com/yrss1/my-shop/tree/main/user/pkg/server"
+	"go.uber.org/zap"
 	"os"
 	"os/signal"
 	"syscall"
@@ -16,15 +18,17 @@ import (
 )
 
 func Run() {
+	logger := log.LoggerFromContext(context.Background())
+
 	configs, err := config.New()
 	if err != nil {
-		fmt.Printf("ERR_INIT_CONFIGS: %v", err)
+		logger.Error("ERR_INIT_CONFIGS", zap.Error(err))
 		return
 	}
 
 	repositories, err := repository.New(repository.WithPostgresStore(configs.POSTGRES.DSN))
 	if err != nil {
-		fmt.Printf("ERR_INIT_REPOSITORIES: %v", err)
+		logger.Error("ERR_INIT_REPOSITORIES", zap.Error(err))
 		return
 	}
 
@@ -32,12 +36,10 @@ func Run() {
 		shop.WithUserRepository(repositories.User),
 	)
 	if err != nil {
-		fmt.Printf("ERR_INIT_SHOP_SERVICE: %v", err)
+		logger.Error("ERR_INIT_SHOP_SERVICE", zap.Error(err))
 		return
 	}
-	fmt.Println("--------------------------------")
-	fmt.Println(configs.APP.GRPCPort)
-	fmt.Println("--------------------------------")
+
 	handlers, err := handler.New(
 		handler.Dependencies{
 			Configs:     configs,
@@ -46,7 +48,7 @@ func Run() {
 		handler.WithHTTPHandler(),
 		handler.WithGRPCHandler())
 	if err != nil {
-		fmt.Printf("ERR_INIT_HANDLERS: %v", err)
+		logger.Error("ERR_INIT_HANDLERS", zap.Error(err))
 		return
 	}
 
@@ -55,15 +57,18 @@ func Run() {
 		server.WithGRPCServer(handlers.GRPCServer, configs.APP.GRPCPort),
 	)
 	if err != nil {
-		fmt.Printf("ERR_RUN_SERVERS: %v", err)
+		logger.Error("ERR_INIT_SERVERS", zap.Error(err))
 		return
 	}
 	if err = servers.Run(); err != nil {
-		fmt.Printf("ERR_RUN_SERVERS: %v", err)
+		logger.Error("ERR_RUN_SERVERS", zap.Error(err))
 		return
 	}
-	fmt.Println("http server started on http://localhost:" + configs.APP.Port)
-	fmt.Println("grpc server started on http://localhost:" + configs.APP.GRPCPort)
+	logger.Info("http server started on http://localhost:" + configs.APP.Port + "/swagger/index.html")
+	logger.Info("grpc server started on http://localhost:" + configs.APP.GRPCPort)
+
+	//fmt.Println("http server started on http://localhost:" + configs.APP.Port)
+	//fmt.Println("grpc server started on http://localhost:" + configs.APP.GRPCPort)
 
 	var wait time.Duration
 	flag.DurationVar(&wait, "graceful-timeout", time.Second*15, "the duration for which the httpServer gracefully wait for existing connections to finish - e.g. 15s or 1m")
@@ -76,6 +81,7 @@ func Run() {
 
 	ctx, cancel := context.WithTimeout(context.Background(), wait)
 	defer cancel()
+
 	if err = servers.Stop(ctx); err != nil {
 		panic(err)
 	}
