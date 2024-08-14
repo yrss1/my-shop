@@ -7,7 +7,7 @@ import (
 	"github.com/yrss1/my-shop/tree/main/user/internal/config"
 	"github.com/yrss1/my-shop/tree/main/user/internal/handler"
 	"github.com/yrss1/my-shop/tree/main/user/internal/repository"
-	"github.com/yrss1/my-shop/tree/main/user/internal/service/shop"
+	"github.com/yrss1/my-shop/tree/main/user/internal/service/userService"
 	"github.com/yrss1/my-shop/tree/main/user/pkg/log"
 	"github.com/yrss1/my-shop/tree/main/user/pkg/server"
 	"go.uber.org/zap"
@@ -32,18 +32,18 @@ func Run() {
 		return
 	}
 
-	shopService, err := shop.New(
-		shop.WithUserRepository(repositories.User),
+	userService, err := userService.New(
+		userService.WithUserRepository(repositories.User),
 	)
 	if err != nil {
-		logger.Error("ERR_INIT_SHOP_SERVICE", zap.Error(err))
+		logger.Error("ERR_INIT_USER_SERVICE", zap.Error(err))
 		return
 	}
 
 	handlers, err := handler.New(
 		handler.Dependencies{
 			Configs:     configs,
-			ShopService: shopService,
+			UserService: userService,
 		},
 		handler.WithHTTPHandler(),
 		handler.WithGRPCHandler())
@@ -61,14 +61,11 @@ func Run() {
 		return
 	}
 	if err = servers.Run(); err != nil {
-		logger.Error("ERR_RUN_SERVERS", zap.Error(err))
+		logger.Error("ERR_INIT_SERVERS", zap.Error(err))
 		return
 	}
 	logger.Info("http server started on http://localhost:" + configs.APP.Port + "/swagger/index.html")
 	logger.Info("grpc server started on http://localhost:" + configs.APP.GRPCPort)
-
-	//fmt.Println("http server started on http://localhost:" + configs.APP.Port)
-	//fmt.Println("grpc server started on http://localhost:" + configs.APP.GRPCPort)
 
 	var wait time.Duration
 	flag.DurationVar(&wait, "graceful-timeout", time.Second*15, "the duration for which the httpServer gracefully wait for existing connections to finish - e.g. 15s or 1m")

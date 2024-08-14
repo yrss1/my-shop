@@ -4,18 +4,18 @@ import (
 	"errors"
 	"github.com/gin-gonic/gin"
 	"github.com/yrss1/my-shop/tree/main/order/internal/domain/order"
-	"github.com/yrss1/my-shop/tree/main/order/internal/service/shop"
+	"github.com/yrss1/my-shop/tree/main/order/internal/service/orderService"
 	"github.com/yrss1/my-shop/tree/main/order/pkg/helpers"
 	"github.com/yrss1/my-shop/tree/main/order/pkg/server/response"
 	"github.com/yrss1/my-shop/tree/main/order/pkg/store"
 )
 
 type OrderHandler struct {
-	shopService *shop.Service
+	orderService *orderService.Service
 }
 
-func NewOrderHandler(s *shop.Service) *OrderHandler {
-	return &OrderHandler{shopService: s}
+func NewOrderHandler(s *orderService.Service) *OrderHandler {
+	return &OrderHandler{orderService: s}
 }
 
 func (h *OrderHandler) Routes(r *gin.RouterGroup) {
@@ -43,7 +43,7 @@ func (h *OrderHandler) Routes(r *gin.RouterGroup) {
 // @Failure 500 {object} response.Object
 // @Router / [get]
 func (h *OrderHandler) list(c *gin.Context) {
-	res, err := h.shopService.ListOrders(c)
+	res, err := h.orderService.ListOrders(c)
 	if err != nil {
 		response.InternalServerError(c, err)
 		return
@@ -74,7 +74,7 @@ func (h *OrderHandler) add(c *gin.Context) {
 		return
 	}
 	// нужно добавить проверку на продукты
-	res, err := h.shopService.CreateOrder(c, req)
+	res, err := h.orderService.CreateOrder(c, req)
 	if err != nil {
 		response.InternalServerError(c, err)
 		return
@@ -97,7 +97,7 @@ func (h *OrderHandler) add(c *gin.Context) {
 func (h *OrderHandler) get(c *gin.Context) {
 	id := c.Param("id")
 
-	res, err := h.shopService.GetOrder(c, id)
+	res, err := h.orderService.GetOrder(c, id)
 	if err != nil {
 		switch {
 		case errors.Is(err, store.ErrorNotFound):
@@ -138,7 +138,7 @@ func (h *OrderHandler) update(c *gin.Context) {
 		return
 	}
 
-	if err := h.shopService.UpdateOrder(c, id, req); err != nil {
+	if err := h.orderService.UpdateOrder(c, id, req); err != nil {
 		switch {
 		case errors.Is(err, store.ErrorNotFound):
 			response.NotFound(c, err)
@@ -165,7 +165,7 @@ func (h *OrderHandler) update(c *gin.Context) {
 func (h *OrderHandler) delete(c *gin.Context) {
 	id := c.Param("id")
 
-	if err := h.shopService.DeleteOrder(c, id); err != nil {
+	if err := h.orderService.DeleteOrder(c, id); err != nil {
 		switch {
 		case errors.Is(err, store.ErrorNotFound):
 			response.NotFound(c, err)
@@ -201,7 +201,7 @@ func (h *OrderHandler) search(c *gin.Context) {
 		return
 	}
 
-	res, err := h.shopService.SearchOrder(c, req)
+	res, err := h.orderService.SearchOrder(c, req)
 	if err != nil {
 		response.InternalServerError(c, err)
 		return

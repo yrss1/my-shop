@@ -1,20 +1,20 @@
 version: '3.8'
 
 services:
-#  postgres:
-#    image: postgres:13
-#    container_name: microservices-postgres
-#    environment:
-#      POSTGRES_DB: "${POSTGRES_DB}"
-#      POSTGRES_USER: "${POSTGRES_USER}"
-#      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
-#    ports:
-#      - "5432:5432"
-#    networks:
-#      - backend
-#    volumes:
-#      - postgres-data:/var/lib/postgresql/data
-#    restart: unless-stopped
+  postgres:
+    image: postgres:13
+    container_name: microservices-postgres
+    environment:
+      POSTGRES_DB: "${POSTGRES_DB}"
+      POSTGRES_USER: "${POSTGRES_USER}"
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
+    ports:
+      - "5432:5432"
+    networks:
+      - backend
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    restart: unless-stopped
 
   user:
     image: user-service-app
@@ -29,8 +29,8 @@ services:
       context: ./user
       dockerfile: Dockerfile
     restart: unless-stopped
-#    depends_on:
-##      - postgres
+    depends_on:
+      - postgres
 
   product:
     image: product-service-app
@@ -46,7 +46,7 @@ services:
       dockerfile: Dockerfile
     restart: unless-stopped
     depends_on:
-#      - postgres
+      - postgres
       - user
 
   order:
@@ -63,7 +63,7 @@ services:
       dockerfile: Dockerfile
     restart: unless-stopped
     depends_on:
-#      - postgres
+      - postgres
       - user
       - product
 
@@ -81,7 +81,7 @@ services:
       dockerfile: Dockerfile
     restart: unless-stopped
     depends_on:
-#      - postgres
+      - postgres
       - user
       - product
       - order
@@ -100,7 +100,7 @@ services:
       dockerfile: Dockerfile
     restart: unless-stopped
     depends_on:
-#      - postgres
+      - postgres
       - user
       - product
       - order

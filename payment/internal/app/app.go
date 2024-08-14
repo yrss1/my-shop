@@ -9,7 +9,9 @@ import (
 	"github.com/yrss1/my-shop/tree/main/payment/internal/provider/epay"
 	"github.com/yrss1/my-shop/tree/main/payment/internal/repository"
 	"github.com/yrss1/my-shop/tree/main/payment/internal/service/epayment"
+	"github.com/yrss1/my-shop/tree/main/payment/pkg/log"
 	"github.com/yrss1/my-shop/tree/main/payment/pkg/server"
+	"go.uber.org/zap"
 	"os"
 	"os/signal"
 	"syscall"
@@ -17,15 +19,17 @@ import (
 )
 
 func Run() {
+	logger := log.LoggerFromContext(context.Background())
+
 	configs, err := config.New()
 	if err != nil {
-		fmt.Printf("ERR_INIT_CONFIGS: %v", err)
+		logger.Error("ERR_INIT_CONFIGS", zap.Error(err))
 		return
 	}
 
 	repositories, err := repository.New(repository.WithPostgresStore(configs.POSTGRES.DSN))
 	if err != nil {
-		fmt.Printf("ERR_INIT_REPOSITORIES: %v", err)
+		logger.Error("ERR_INIT_REPOSITORIES", zap.Error(err))
 		return
 	}
 	EpayClient, err := epay.New(epay.Credentials{
@@ -37,7 +41,7 @@ func Run() {
 		GlobalToken:    epay.TokenResponse{},
 	})
 	if err != nil {
-		fmt.Printf("ERR_INIT_CLIENTS: %v", err)
+		logger.Error("ERR_INIT_CLIENTS", zap.Error(err))
 		return
 	}
 
@@ -46,7 +50,7 @@ func Run() {
 		epayment.WithEpayClient(EpayClient),
 	)
 	if err != nil {
-		fmt.Printf("ERR_INIT_EPAY_SERVICE: %v", err)
+		logger.Error("ERR_INIT_EPAY_SERVICE", zap.Error(err))
 		return
 	}
 
@@ -57,20 +61,21 @@ func Run() {
 		},
 		handler.WithHTTPHandler())
 	if err != nil {
-		fmt.Printf("ERR_INIT_HANDLERS: %v", err)
+		logger.Error("ERR_INIT_HANDLERS", zap.Error(err))
 		return
 	}
 
 	servers, err := server.New(server.WithHTTPServer(handlers.HTTP, configs.APP.Port))
 	if err != nil {
-		fmt.Printf("ERR_RUN_SERVERS: %v", err)
+		logger.Error("ERR_INIT_SERVERS", zap.Error(err))
 		return
 	}
 	if err = servers.Run(); err != nil {
-		fmt.Printf("ERR_RUN_SERVERS: %v", err)
+		logger.Error("ERR_RUN_SERVERS", zap.Error(err))
 		return
 	}
-	fmt.Println("http server started on http://localhost:" + configs.APP.Port)
+
+	logger.Info("http server started on http://localhost:" + configs.APP.Port + "/swagger/index.html")
 
 	var wait time.Duration
 	flag.DurationVar(&wait, "graceful-timeout", time.Second*15, "the duration for which the httpServer gracefully wait for existing connections to finish - e.g. 15s or 1m")

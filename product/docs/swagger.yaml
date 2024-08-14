@@ -159,7 +159,7 @@ paths:
         type: string
       - description: Product request
         in: body
-        name: user
+        name: product
         required: true
         schema:
           $ref: '#/definitions/product.Request'

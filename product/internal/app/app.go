@@ -7,8 +7,10 @@ import (
 	"github.com/yrss1/my-shop/tree/main/product/internal/config"
 	"github.com/yrss1/my-shop/tree/main/product/internal/handler"
 	"github.com/yrss1/my-shop/tree/main/product/internal/repository"
-	"github.com/yrss1/my-shop/tree/main/product/internal/service/shop"
+	"github.com/yrss1/my-shop/tree/main/product/internal/service/productService"
+	"github.com/yrss1/my-shop/tree/main/product/pkg/log"
 	"github.com/yrss1/my-shop/tree/main/product/pkg/server"
+	"go.uber.org/zap"
 	"os"
 	"os/signal"
 	"syscall"
@@ -16,47 +18,57 @@ import (
 )
 
 func Run() {
+	logger := log.LoggerFromContext(context.Background())
+
 	configs, err := config.New()
 	if err != nil {
-		fmt.Printf("ERR_INIT_CONFIGS: %v", err)
+		logger.Error("ERR_INIT_CONFIGS", zap.Error(err))
 		return
 	}
 
 	repositories, err := repository.New(repository.WithPostgresStore(configs.POSTGRES.DSN))
 	if err != nil {
-		fmt.Printf("ERR_INIT_REPOSITORIES: %v", err)
+		logger.Error("ERR_INIT_REPOSITORIES", zap.Error(err))
 		return
 	}
 
-	shopService, err := shop.New(
-		shop.WithProductRepository(repositories.Product),
+	productService, err := productService.New(
+		productService.WithProductRepository(repositories.Product),
 	)
 	if err != nil {
-		fmt.Printf("ERR_INIT_SHOP_SERVICE: %v", err)
+		logger.Error("ERR_INIT_PRODUCT_SERVICE", zap.Error(err))
 		return
 	}
+
+	//conn, err := grpc.NewClient("localhost:9004", grpc.WithTransportCredentials(insecure.NewCredentials()))
+	//if err != nil {
+	//	panic(err)
+	//}
+	//defer conn.Close()
+	//
+	//userGRPCClient := pb.NewUserServiceClient(conn)
 
 	handlers, err := handler.New(
 		handler.Dependencies{
-			Configs:     configs,
-			ShopService: shopService,
+			Configs:        configs,
+			ProductService: productService,
 		},
 		handler.WithHTTPHandler())
 	if err != nil {
-		fmt.Printf("ERR_INIT_HANDLERS: %v", err)
+		logger.Error("ERR_INIT_HANDLERS", zap.Error(err))
 		return
 	}
 
 	servers, err := server.New(server.WithHTTPServer(handlers.HTTP, configs.APP.Port))
 	if err != nil {
-		fmt.Printf("ERR_RUN_SERVERS: %v", err)
+		logger.Error("ERR_INIT_SERVERS", zap.Error(err))
 		return
 	}
 	if err = servers.Run(); err != nil {
-		fmt.Printf("ERR_RUN_SERVERS: %v", err)
+		logger.Error("ERR_RUN_SERVERS", zap.Error(err))
 		return
 	}
-	fmt.Println("http server started on http://localhost:" + configs.APP.Port)
+	logger.Info("http server started on http://localhost:" + configs.APP.Port + "/swagger/index.html")
 
 	var wait time.Duration
 	flag.DurationVar(&wait, "graceful-timeout", time.Second*15, "the duration for which the httpServer gracefully wait for existing connections to finish - e.g. 15s or 1m")

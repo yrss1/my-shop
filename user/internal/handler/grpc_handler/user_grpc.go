@@ -2,18 +2,18 @@ package grpc_handler
 
 import (
 	"context"
-	"github.com/yrss1/my-shop/tree/main/user/internal/service/shop"
+	"github.com/yrss1/my-shop/tree/main/user/internal/service/userService"
 	"github.com/yrss1/my-shop/tree/main/user/pb"
 	"log"
 )
 
 type UserServiceServer struct {
 	pb.UnimplementedUserServiceServer
-	shopService *shop.Service
+	userService *userService.Service
 }
 
-func NewUserServiceServer(s *shop.Service) *UserServiceServer {
-	return &UserServiceServer{shopService: s}
+func NewUserServiceServer(s *userService.Service) *UserServiceServer {
+	return &UserServiceServer{userService: s}
 }
 
 func (s *UserServiceServer) SayHello(ctx context.Context, in *pb.Message) (*pb.Message, error) {

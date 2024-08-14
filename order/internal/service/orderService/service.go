@@ -1,11 +1,11 @@
-package shop
+package orderService
 
-import "github.com/yrss1/my-shop/tree/main/product/internal/domain/product"
+import "github.com/yrss1/my-shop/tree/main/order/internal/domain/order"
 
 type Configuration func(s *Service) error
 
 type Service struct {
-	productRepository product.Repository
+	orderRepository order.Repository
 }
 
 func New(configs ...Configuration) (s *Service, err error) {
@@ -20,9 +20,9 @@ func New(configs ...Configuration) (s *Service, err error) {
 	return
 }
 
-func WithProductRepository(productRepository product.Repository) Configuration {
+func WithOrderRepository(orderRepository order.Repository) Configuration {
 	return func(s *Service) error {
-		s.productRepository = productRepository
+		s.orderRepository = orderRepository
 		return nil
 	}
 }

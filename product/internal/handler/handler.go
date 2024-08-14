@@ -7,14 +7,14 @@ import (
 	"github.com/yrss1/my-shop/tree/main/product/docs"
 	"github.com/yrss1/my-shop/tree/main/product/internal/config"
 	"github.com/yrss1/my-shop/tree/main/product/internal/handler/http"
-	"github.com/yrss1/my-shop/tree/main/product/internal/service/shop"
+	"github.com/yrss1/my-shop/tree/main/product/internal/service/productService"
 	"github.com/yrss1/my-shop/tree/main/product/pkg/server/router"
 )
 
 type Dependencies struct {
 	Configs config.Configs
 
-	ShopService *shop.Service
+	ProductService *productService.Service
 }
 type Handler struct {
 	dependencies Dependencies
@@ -44,7 +44,7 @@ func WithHTTPHandler() Configuration {
 		docs.SwaggerInfo.BasePath = h.dependencies.Configs.APP.Path
 		h.HTTP.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
-		productHandler := http.NewProductHandler(h.dependencies.ShopService)
+		productHandler := http.NewProductHandler(h.dependencies.ProductService)
 
 		api := h.HTTP.Group("/api/v1/")
 		{

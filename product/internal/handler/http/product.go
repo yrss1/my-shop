@@ -4,18 +4,20 @@ import (
 	"errors"
 	"github.com/gin-gonic/gin"
 	"github.com/yrss1/my-shop/tree/main/product/internal/domain/product"
-	"github.com/yrss1/my-shop/tree/main/product/internal/service/shop"
+	"github.com/yrss1/my-shop/tree/main/product/internal/service/productService"
 	"github.com/yrss1/my-shop/tree/main/product/pkg/helpers"
 	"github.com/yrss1/my-shop/tree/main/product/pkg/server/response"
 	"github.com/yrss1/my-shop/tree/main/product/pkg/store"
 )
 
 type ProductHandler struct {
-	shopService *shop.Service
+	productService *productService.Service
 }
 
-func NewProductHandler(s *shop.Service) *ProductHandler {
-	return &ProductHandler{shopService: s}
+func NewProductHandler(s *productService.Service) *ProductHandler {
+	return &ProductHandler{
+		productService: s,
+	}
 }
 
 func (h *ProductHandler) Routes(r *gin.RouterGroup) {
@@ -43,7 +45,7 @@ func (h *ProductHandler) Routes(r *gin.RouterGroup) {
 // @Failure 500 {object} response.Object
 // @Router / [get]
 func (h *ProductHandler) list(c *gin.Context) {
-	res, err := h.shopService.ListProducts(c)
+	res, err := h.productService.ListProducts(c)
 	if err != nil {
 		response.InternalServerError(c, err)
 		return
@@ -74,7 +76,7 @@ func (h *ProductHandler) add(c *gin.Context) {
 		return
 	}
 
-	res, err := h.shopService.CreateProduct(c, req)
+	res, err := h.productService.CreateProduct(c, req)
 	if err != nil {
 		response.InternalServerError(c, err)
 		return
@@ -96,8 +98,13 @@ func (h *ProductHandler) add(c *gin.Context) {
 // @Router /{id} [get]
 func (h *ProductHandler) get(c *gin.Context) {
 	id := c.Param("id")
-
-	res, err := h.shopService.GetProduct(c, id)
+	//message := pb.Message{Body: "hello"}
+	//data, err := h.userGRPCService.SayHello(c, &message)
+	//if err != nil {
+	//	return
+	//}
+	//fmt.Println(data)
+	res, err := h.productService.GetProduct(c, id)
 	if err != nil {
 		switch {
 		case errors.Is(err, store.ErrorNotFound):
@@ -118,7 +125,7 @@ func (h *ProductHandler) get(c *gin.Context) {
 // @Accept  json
 // @Produce  json
 // @Param id path string true "Product ID"
-// @Param user body product.Request true "Product request"
+// @Param product body product.Request true "Product request"
 // @Success 200 {string} string "ok"
 // @Failure 400 {object} response.Object
 // @Failure 404 {object} response.Object
@@ -138,7 +145,7 @@ func (h *ProductHandler) update(c *gin.Context) {
 		return
 	}
 
-	if err := h.shopService.UpdateProduct(c, id, req); err != nil {
+	if err := h.productService.UpdateProduct(c, id, req); err != nil {
 		switch {
 		case errors.Is(err, store.ErrorNotFound):
 			response.NotFound(c, err)
@@ -165,7 +172,7 @@ func (h *ProductHandler) update(c *gin.Context) {
 func (h *ProductHandler) delete(c *gin.Context) {
 	id := c.Param("id")
 
-	if err := h.shopService.DeleteProduct(c, id); err != nil {
+	if err := h.productService.DeleteProduct(c, id); err != nil {
 		switch {
 		case errors.Is(err, store.ErrorNotFound):
 			response.NotFound(c, err)
@@ -201,7 +208,7 @@ func (h *ProductHandler) search(c *gin.Context) {
 		return
 	}
 
-	res, err := h.shopService.SearchProduct(c, req)
+	res, err := h.productService.SearchProduct(c, req)
 	if err != nil {
 		response.InternalServerError(c, err)
 		return

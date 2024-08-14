@@ -24,10 +24,11 @@ type (
 	}
 
 	AppConfig struct {
-		Mode    string `required:"true"`
-		Port    string
-		Path    string
-		Timeout time.Duration
+		Mode     string `required:"true"`
+		Port     string
+		Path     string
+		UserPort string
+		Timeout  time.Duration
 	}
 
 	StoreConfig struct {

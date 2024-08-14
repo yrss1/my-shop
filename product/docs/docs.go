@@ -208,7 +208,7 @@ const docTemplate = `{
                     },
                     {
                         "description": "Product request",
-                        "name": "user",
+                        "name": "product",
                         "in": "body",
                         "required": true,
                         "schema": {

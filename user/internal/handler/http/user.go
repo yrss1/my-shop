@@ -4,18 +4,18 @@ import (
 	"errors"
 	"github.com/gin-gonic/gin"
 	"github.com/yrss1/my-shop/tree/main/user/internal/domain/user"
-	"github.com/yrss1/my-shop/tree/main/user/internal/service/shop"
+	"github.com/yrss1/my-shop/tree/main/user/internal/service/userService"
 	"github.com/yrss1/my-shop/tree/main/user/pkg/helpers"
 	"github.com/yrss1/my-shop/tree/main/user/pkg/server/response"
 	"github.com/yrss1/my-shop/tree/main/user/pkg/store"
 )
 
 type UserHandler struct {
-	shopService *shop.Service
+	userService *userService.Service
 }
 
-func NewUserHandler(s *shop.Service) *UserHandler {
-	return &UserHandler{shopService: s}
+func NewUserHandler(s *userService.Service) *UserHandler {
+	return &UserHandler{userService: s}
 }
 
 func (h *UserHandler) Routes(r *gin.RouterGroup) {
@@ -43,7 +43,7 @@ func (h *UserHandler) Routes(r *gin.RouterGroup) {
 // @Failure 500 {object} response.Object
 // @Router / [get]
 func (h *UserHandler) list(c *gin.Context) {
-	res, err := h.shopService.ListUsers(c)
+	res, err := h.userService.ListUsers(c)
 	if err != nil {
 		response.InternalServerError(c, err)
 		return
@@ -74,7 +74,7 @@ func (h *UserHandler) add(c *gin.Context) {
 		return
 	}
 
-	res, err := h.shopService.CreateUser(c, req)
+	res, err := h.userService.CreateUser(c, req)
 	if err != nil {
 		response.InternalServerError(c, err)
 		return
@@ -97,7 +97,7 @@ func (h *UserHandler) add(c *gin.Context) {
 func (h *UserHandler) get(c *gin.Context) {
 	id := c.Param("id")
 
-	res, err := h.shopService.GetUser(c, id)
+	res, err := h.userService.GetUser(c, id)
 	if err != nil {
 		switch {
 		case errors.Is(err, store.ErrorNotFound):
@@ -138,7 +138,7 @@ func (h *UserHandler) update(c *gin.Context) {
 		return
 	}
 
-	if err := h.shopService.UpdateUser(c, id, req); err != nil {
+	if err := h.userService.UpdateUser(c, id, req); err != nil {
 		switch {
 		case errors.Is(err, store.ErrorNotFound):
 			response.NotFound(c, err)
@@ -165,7 +165,7 @@ func (h *UserHandler) update(c *gin.Context) {
 func (h *UserHandler) delete(c *gin.Context) {
 	id := c.Param("id")
 
-	if err := h.shopService.DeleteUser(c, id); err != nil {
+	if err := h.userService.DeleteUser(c, id); err != nil {
 		switch {
 		case errors.Is(err, store.ErrorNotFound):
 			response.NotFound(c, err)
@@ -201,7 +201,7 @@ func (h *UserHandler) search(c *gin.Context) {
 		return
 	}
 
-	res, err := h.shopService.SearchUser(c, req)
+	res, err := h.userService.SearchUser(c, req)
 	if err != nil {
 		response.InternalServerError(c, err)
 		return

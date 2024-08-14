@@ -8,7 +8,7 @@ import (
 	"github.com/yrss1/my-shop/tree/main/user/internal/config"
 	"github.com/yrss1/my-shop/tree/main/user/internal/handler/grpc_handler"
 	"github.com/yrss1/my-shop/tree/main/user/internal/handler/http"
-	"github.com/yrss1/my-shop/tree/main/user/internal/service/shop"
+	"github.com/yrss1/my-shop/tree/main/user/internal/service/userService"
 	pb "github.com/yrss1/my-shop/tree/main/user/pb"
 	"github.com/yrss1/my-shop/tree/main/user/pkg/server/router"
 	"google.golang.org/grpc"
@@ -17,7 +17,7 @@ import (
 type Dependencies struct {
 	Configs config.Configs
 
-	ShopService *shop.Service
+	UserService *userService.Service
 }
 type Handler struct {
 	dependencies Dependencies
@@ -49,7 +49,7 @@ func WithHTTPHandler() Configuration {
 		docs.SwaggerInfo.BasePath = h.dependencies.Configs.APP.Path
 		h.HTTP.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
-		userHandler := http.NewUserHandler(h.dependencies.ShopService)
+		userHandler := http.NewUserHandler(h.dependencies.UserService)
 
 		api := h.HTTP.Group("/api/v1/")
 		{
@@ -61,7 +61,7 @@ func WithHTTPHandler() Configuration {
 
 func WithGRPCHandler() Configuration {
 	return func(h *Handler) (err error) {
-		pb.RegisterUserServiceServer(h.GRPCServer, grpc_handler.NewUserServiceServer(h.dependencies.ShopService))
+		pb.RegisterUserServiceServer(h.GRPCServer, grpc_handler.NewUserServiceServer(h.dependencies.UserService))
 		return
 	}
 }

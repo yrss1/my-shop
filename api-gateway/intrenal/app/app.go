@@ -24,10 +24,10 @@ func Run() {
 	r := gin.Default()
 
 	services := map[string]string{
-		"/orders":   configs.API.Order,
-		"/payments": configs.API.Payment,
-		"/products": configs.API.Product,
-		"/users":    configs.API.User,
+		"orders":   configs.API.Order,
+		"payments": configs.API.Payment,
+		"products": configs.API.Product,
+		"users":    configs.API.User,
 	}
 
 	for path, target := range services {
@@ -68,15 +68,16 @@ func registerRoutes(r *gin.Engine, basePath, target string) {
 	r.Any(basePath+"/*path", proxy(basePath, target))
 }
 
-// proxy возвращает обработчик для проксирования запросов к целевому серверу
 func proxy(basePath, target string) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		// Получаем полный путь запроса
 		originalPath := c.Param("path")
+
 		// Удаляем базовый путь из исходного запроса
-		trimmedPath := strings.TrimPrefix(originalPath, strings.TrimPrefix(basePath, "/"))
+		trimmedPath := strings.TrimPrefix(originalPath, strings.TrimSuffix(basePath, "/"))
+
 		// Формируем целевой URL с новым путем
-		targetURL := fmt.Sprintf("%s/api/v1/%s?%s", target, trimmedPath, c.Request.URL.RawQuery)
+		targetURL := fmt.Sprintf("%s/%s?%s", target, strings.TrimLeft(trimmedPath, "/"), c.Request.URL.RawQuery)
 		fmt.Printf("Proxying request to: %s\n", targetURL) // Логирование целевого URL
 
 		// Создаем новый запрос
