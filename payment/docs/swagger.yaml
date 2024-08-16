@@ -36,7 +36,7 @@ definitions:
 info:
   contact: {}
 paths:
-  /:
+  /payments:
     get:
       consumes:
       - application/json
@@ -86,7 +86,7 @@ paths:
       summary: Add a payment
       tags:
       - payments
-  /{id}:
+  /payments/{id}:
     delete:
       consumes:
       - application/json
@@ -181,7 +181,7 @@ paths:
       summary: Update a payment
       tags:
       - payments
-  /search:
+  /payments/search:
     get:
       consumes:
       - application/json

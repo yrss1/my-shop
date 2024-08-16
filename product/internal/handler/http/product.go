@@ -21,7 +21,7 @@ func NewProductHandler(s *productService.Service) *ProductHandler {
 }
 
 func (h *ProductHandler) Routes(r *gin.RouterGroup) {
-	api := r.Group("")
+	api := r.Group("/products")
 	{
 		api.GET("/", h.list)
 		api.POST("/", h.add)
@@ -43,7 +43,7 @@ func (h *ProductHandler) Routes(r *gin.RouterGroup) {
 // @Produce  json
 // @Success 200 {array} product.Response
 // @Failure 500 {object} response.Object
-// @Router / [get]
+// @Router /products [get]
 func (h *ProductHandler) list(c *gin.Context) {
 	res, err := h.productService.ListProducts(c)
 	if err != nil {
@@ -64,7 +64,7 @@ func (h *ProductHandler) list(c *gin.Context) {
 // @Success 200 {object} product.Response
 // @Failure 400 {object} response.Object
 // @Failure 500 {object} response.Object
-// @Router / [post]
+// @Router /products [post]
 func (h *ProductHandler) add(c *gin.Context) {
 	req := product.Request{}
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -95,7 +95,7 @@ func (h *ProductHandler) add(c *gin.Context) {
 // @Success 200 {object} product.Response
 // @Failure 404 {object} response.Object
 // @Failure 500 {object} response.Object
-// @Router /{id} [get]
+// @Router /products/{id} [get]
 func (h *ProductHandler) get(c *gin.Context) {
 	id := c.Param("id")
 	//message := pb.Message{Body: "hello"}
@@ -130,7 +130,7 @@ func (h *ProductHandler) get(c *gin.Context) {
 // @Failure 400 {object} response.Object
 // @Failure 404 {object} response.Object
 // @Failure 500 {object} response.Object
-// @Router /{id} [put]
+// @Router /products/{id} [put]
 func (h *ProductHandler) update(c *gin.Context) {
 	id := c.Param("id")
 	req := product.Request{}
@@ -168,7 +168,7 @@ func (h *ProductHandler) update(c *gin.Context) {
 // @Success 200 {string} string "Product deleted"
 // @Failure 404 {object} response.Object
 // @Failure 500 {object} response.Object
-// @Router /{id} [delete]
+// @Router /products/{id} [delete]
 func (h *ProductHandler) delete(c *gin.Context) {
 	id := c.Param("id")
 
@@ -196,7 +196,7 @@ func (h *ProductHandler) delete(c *gin.Context) {
 // @Success 200 {array} product.Response
 // @Failure 400 {object} response.Object
 // @Failure 500 {object} response.Object
-// @Router /search [get]
+// @Router /products/search [get]
 func (h *ProductHandler) search(c *gin.Context) {
 	req := product.Request{
 		Name:     helpers.GetStringPtr(c.Query("name")),

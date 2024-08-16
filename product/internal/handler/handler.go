@@ -46,7 +46,7 @@ func WithHTTPHandler() Configuration {
 
 		productHandler := http.NewProductHandler(h.dependencies.ProductService)
 
-		api := h.HTTP.Group("/api/v1/")
+		api := h.HTTP.Group(h.dependencies.Configs.APP.Path)
 		{
 			productHandler.Routes(api)
 		}

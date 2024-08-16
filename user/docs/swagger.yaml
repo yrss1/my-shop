@@ -36,7 +36,7 @@ definitions:
 info:
   contact: {}
 paths:
-  /:
+  /users:
     get:
       consumes:
       - application/json
@@ -86,7 +86,7 @@ paths:
       summary: Add a user
       tags:
       - users
-  /{id}:
+  /users/{id}:
     delete:
       consumes:
       - application/json
@@ -181,7 +181,7 @@ paths:
       summary: Update a user
       tags:
       - users
-  /search:
+  /users/search:
     get:
       consumes:
       - application/json

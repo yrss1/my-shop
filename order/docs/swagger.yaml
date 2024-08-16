@@ -40,7 +40,7 @@ definitions:
 info:
   contact: {}
 paths:
-  /:
+  /orders:
     get:
       consumes:
       - application/json
@@ -90,7 +90,7 @@ paths:
       summary: Add an order
       tags:
       - orders
-  /{id}:
+  /orders/{id}:
     delete:
       consumes:
       - application/json
@@ -185,7 +185,7 @@ paths:
       summary: Update an order
       tags:
       - orders
-  /search:
+  /orders/search:
     get:
       consumes:
       - application/json

@@ -19,7 +19,7 @@ func NewOrderHandler(s *orderService.Service) *OrderHandler {
 }
 
 func (h *OrderHandler) Routes(r *gin.RouterGroup) {
-	api := r.Group("")
+	api := r.Group("/orders")
 	{
 		api.GET("/", h.list)
 		api.POST("/", h.add)
@@ -41,7 +41,7 @@ func (h *OrderHandler) Routes(r *gin.RouterGroup) {
 // @Produce  json
 // @Success 200 {array} order.Response
 // @Failure 500 {object} response.Object
-// @Router / [get]
+// @Router /orders [get]
 func (h *OrderHandler) list(c *gin.Context) {
 	res, err := h.orderService.ListOrders(c)
 	if err != nil {
@@ -62,7 +62,7 @@ func (h *OrderHandler) list(c *gin.Context) {
 // @Success 200 {object} order.Response
 // @Failure 400 {object} response.Object
 // @Failure 500 {object} response.Object
-// @Router / [post]
+// @Router /orders [post]
 func (h *OrderHandler) add(c *gin.Context) {
 	req := order.Request{}
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -93,7 +93,7 @@ func (h *OrderHandler) add(c *gin.Context) {
 // @Success 200 {object} order.Response
 // @Failure 404 {object} response.Object
 // @Failure 500 {object} response.Object
-// @Router /{id} [get]
+// @Router /orders/{id} [get]
 func (h *OrderHandler) get(c *gin.Context) {
 	id := c.Param("id")
 
@@ -123,7 +123,7 @@ func (h *OrderHandler) get(c *gin.Context) {
 // @Failure 400 {object} response.Object
 // @Failure 404 {object} response.Object
 // @Failure 500 {object} response.Object
-// @Router /{id} [put]
+// @Router /orders/{id} [put]
 func (h *OrderHandler) update(c *gin.Context) {
 	id := c.Param("id")
 	req := order.Request{}
@@ -161,7 +161,7 @@ func (h *OrderHandler) update(c *gin.Context) {
 // @Success 200 {string} string "Order deleted"
 // @Failure 404 {object} response.Object
 // @Failure 500 {object} response.Object
-// @Router /{id} [delete]
+// @Router /orders/{id} [delete]
 func (h *OrderHandler) delete(c *gin.Context) {
 	id := c.Param("id")
 
@@ -189,7 +189,7 @@ func (h *OrderHandler) delete(c *gin.Context) {
 // @Success 200 {array} order.Response
 // @Failure 400 {object} response.Object
 // @Failure 500 {object} response.Object
-// @Router /search [get]
+// @Router /orders/search [get]
 func (h *OrderHandler) search(c *gin.Context) {
 	req := order.Request{
 		UserID: helpers.GetStringPtr(c.Query("userId")),

@@ -71,7 +71,7 @@ func Run() {
 	logger.Info("http server started on http://localhost:" + configs.APP.Port + "/swagger/index.html")
 
 	var wait time.Duration
-	flag.DurationVar(&wait, "graceful-timeout", time.Second*15, "the duration for which the httpServer gracefully wait for existing connections to finish - e.g. 15s or 1m")
+	flag.DurationVar(&wait, "graceful-timeout", configs.APP.Timeout, "the duration for which the httpServer gracefully wait for existing connections to finish - e.g. 15s or 1m")
 	flag.Parse()
 
 	quit := make(chan os.Signal, 1)

@@ -4,7 +4,7 @@
         "contact": {}
     },
     "paths": {
-        "/": {
+        "/payments": {
             "get": {
                 "description": "Get all payments",
                 "consumes": [
@@ -80,7 +80,7 @@
                 }
             }
         },
-        "/search": {
+        "/payments/search": {
             "get": {
                 "description": "Search payments by user ID or order ID",
                 "consumes": [
@@ -138,7 +138,7 @@
                 }
             }
         },
-        "/{id}": {
+        "/payments/{id}": {
             "get": {
                 "description": "Get payment by ID",
                 "consumes": [

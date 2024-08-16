@@ -40,7 +40,7 @@ definitions:
 info:
   contact: {}
 paths:
-  /:
+  /products:
     get:
       consumes:
       - application/json
@@ -90,7 +90,7 @@ paths:
       summary: Add a product
       tags:
       - products
-  /{id}:
+  /products/{id}:
     delete:
       consumes:
       - application/json
@@ -185,7 +185,7 @@ paths:
       summary: Update a product
       tags:
       - products
-  /search:
+  /products/search:
     get:
       consumes:
       - application/json

@@ -15,7 +15,7 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/": {
+        "/payments": {
             "get": {
                 "description": "Get all payments",
                 "consumes": [
@@ -91,7 +91,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/search": {
+        "/payments/search": {
             "get": {
                 "description": "Search payments by user ID or order ID",
                 "consumes": [
@@ -149,7 +149,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/{id}": {
+        "/payments/{id}": {
             "get": {
                 "description": "Get payment by ID",
                 "consumes": [

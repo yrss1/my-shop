@@ -19,7 +19,7 @@ func NewUserHandler(s *userService.Service) *UserHandler {
 }
 
 func (h *UserHandler) Routes(r *gin.RouterGroup) {
-	api := r.Group("")
+	api := r.Group("/users")
 	{
 		api.GET("/", h.list)
 		api.POST("/", h.add)
@@ -41,7 +41,7 @@ func (h *UserHandler) Routes(r *gin.RouterGroup) {
 // @Produce  json
 // @Success 200 {array} user.Response
 // @Failure 500 {object} response.Object
-// @Router / [get]
+// @Router /users [get]
 func (h *UserHandler) list(c *gin.Context) {
 	res, err := h.userService.ListUsers(c)
 	if err != nil {
@@ -62,7 +62,7 @@ func (h *UserHandler) list(c *gin.Context) {
 // @Success 200 {object} user.Response
 // @Failure 400 {object} response.Object
 // @Failure 500 {object} response.Object
-// @Router / [post]
+// @Router /users [post]
 func (h *UserHandler) add(c *gin.Context) {
 	req := user.Request{}
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -93,7 +93,7 @@ func (h *UserHandler) add(c *gin.Context) {
 // @Success 200 {object} user.Response
 // @Failure 404 {object} response.Object
 // @Failure 500 {object} response.Object
-// @Router /{id} [get]
+// @Router /users/{id} [get]
 func (h *UserHandler) get(c *gin.Context) {
 	id := c.Param("id")
 
@@ -123,7 +123,7 @@ func (h *UserHandler) get(c *gin.Context) {
 // @Failure 400 {object} response.Object
 // @Failure 404 {object} response.Object
 // @Failure 500 {object} response.Object
-// @Router /{id} [put]
+// @Router /users/{id} [put]
 func (h *UserHandler) update(c *gin.Context) {
 	id := c.Param("id")
 	req := user.Request{}
@@ -161,7 +161,7 @@ func (h *UserHandler) update(c *gin.Context) {
 // @Success 200 {string} string "User deleted"
 // @Failure 404 {object} response.Object
 // @Failure 500 {object} response.Object
-// @Router /{id} [delete]
+// @Router /users/{id} [delete]
 func (h *UserHandler) delete(c *gin.Context) {
 	id := c.Param("id")
 
@@ -189,7 +189,7 @@ func (h *UserHandler) delete(c *gin.Context) {
 // @Success 200 {array} user.Response
 // @Failure 400 {object} response.Object
 // @Failure 500 {object} response.Object
-// @Router /search [get]
+// @Router /users/search [get]
 func (h *UserHandler) search(c *gin.Context) {
 	req := user.Request{
 		Name:  helpers.GetStringPtr(c.Query("name")),

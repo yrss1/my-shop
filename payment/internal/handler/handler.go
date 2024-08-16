@@ -45,7 +45,7 @@ func WithHTTPHandler() Configuration {
 
 		paymentHandler := http.NewPaymentHandler(h.dependencies.EpayService)
 
-		api := h.HTTP.Group("/api/v1/")
+		api := h.HTTP.Group(h.dependencies.Configs.APP.Path)
 		{
 			paymentHandler.Routes(api)
 		}

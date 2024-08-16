@@ -4,7 +4,7 @@
         "contact": {}
     },
     "paths": {
-        "/": {
+        "/users": {
             "get": {
                 "description": "Get all users",
                 "consumes": [
@@ -80,7 +80,7 @@
                 }
             }
         },
-        "/search": {
+        "/users/search": {
             "get": {
                 "description": "Search users by name or email",
                 "consumes": [
@@ -132,7 +132,7 @@
                 }
             }
         },
-        "/{id}": {
+        "/users/{id}": {
             "get": {
                 "description": "Get user by ID",
                 "consumes": [

@@ -51,7 +51,7 @@ func WithHTTPHandler() Configuration {
 
 		userHandler := http.NewUserHandler(h.dependencies.UserService)
 
-		api := h.HTTP.Group("/api/v1/")
+		api := h.HTTP.Group("/api/v1")
 		{
 			userHandler.Routes(api)
 		}

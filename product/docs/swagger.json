@@ -4,7 +4,7 @@
         "contact": {}
     },
     "paths": {
-        "/": {
+        "/products": {
             "get": {
                 "description": "Get all products",
                 "consumes": [
@@ -80,7 +80,7 @@
                 }
             }
         },
-        "/search": {
+        "/products/search": {
             "get": {
                 "description": "Search products by name or email",
                 "consumes": [
@@ -132,7 +132,7 @@
                 }
             }
         },
-        "/{id}": {
+        "/products/{id}": {
             "get": {
                 "description": "Get product by ID",
                 "consumes": [

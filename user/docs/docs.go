@@ -15,7 +15,7 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/": {
+        "/users": {
             "get": {
                 "description": "Get all users",
                 "consumes": [
@@ -91,7 +91,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/search": {
+        "/users/search": {
             "get": {
                 "description": "Search users by name or email",
                 "consumes": [
@@ -143,7 +143,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/{id}": {
+        "/users/{id}": {
             "get": {
                 "description": "Get user by ID",
                 "consumes": [

@@ -46,7 +46,7 @@ func WithHTTPHandler() Configuration {
 
 		orderHandler := http.NewOrderHandler(h.dependencies.OrderService)
 
-		api := h.HTTP.Group("/api/v1/")
+		api := h.HTTP.Group(h.dependencies.Configs.APP.Path)
 		{
 			orderHandler.Routes(api)
 		}

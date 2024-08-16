@@ -20,7 +20,7 @@ func NewPaymentHandler(s *epayment.Service) *PaymentHandler {
 }
 
 func (h *PaymentHandler) Routes(r *gin.RouterGroup) {
-	api := r.Group("")
+	api := r.Group("/payments")
 	{
 		api.GET("/", h.list)
 		api.POST("/", h.add)
@@ -44,7 +44,7 @@ func (h *PaymentHandler) Routes(r *gin.RouterGroup) {
 // @Produce  json
 // @Success 200 {array} payment.Response
 // @Failure 500 {object} response.Object
-// @Router / [get]
+// @Router /payments [get]
 func (h *PaymentHandler) list(c *gin.Context) {
 	res, err := h.epayService.ListPayments(c)
 	if err != nil {
@@ -65,7 +65,7 @@ func (h *PaymentHandler) list(c *gin.Context) {
 // @Success 200 {object} payment.Response
 // @Failure 400 {object} response.Object
 // @Failure 500 {object} response.Object
-// @Router / [post]
+// @Router /payments [post]
 func (h *PaymentHandler) add(c *gin.Context) {
 	req := payment.Request{}
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -123,7 +123,7 @@ func (h *PaymentHandler) add(c *gin.Context) {
 // @Success 200 {object} payment.Response
 // @Failure 404 {object} response.Object
 // @Failure 500 {object} response.Object
-// @Router /{id} [get]
+// @Router /payments/{id} [get]
 func (h *PaymentHandler) get(c *gin.Context) {
 	id := c.Param("id")
 
@@ -153,7 +153,7 @@ func (h *PaymentHandler) get(c *gin.Context) {
 // @Failure 400 {object} response.Object
 // @Failure 404 {object} response.Object
 // @Failure 500 {object} response.Object
-// @Router /{id} [put]
+// @Router /payments/{id} [put]
 func (h *PaymentHandler) update(c *gin.Context) {
 	id := c.Param("id")
 	req := payment.Request{}
@@ -191,7 +191,7 @@ func (h *PaymentHandler) update(c *gin.Context) {
 // @Success 200 {string} string "Payment deleted"
 // @Failure 404 {object} response.Object
 // @Failure 500 {object} response.Object
-// @Router /{id} [delete]
+// @Router /payments/{id} [delete]
 func (h *PaymentHandler) delete(c *gin.Context) {
 	id := c.Param("id")
 
@@ -220,7 +220,7 @@ func (h *PaymentHandler) delete(c *gin.Context) {
 // @Success 200 {array} payment.Response
 // @Failure 400 {object} response.Object
 // @Failure 500 {object} response.Object
-// @Router /search [get]
+// @Router /payments/search [get]
 func (h *PaymentHandler) search(c *gin.Context) {
 	req := payment.Request{
 		UserID:  helpers.GetStringPtr(c.Query("userId")),
