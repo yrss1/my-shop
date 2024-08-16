@@ -27,10 +27,11 @@ func (s *Service) CreateUser(ctx context.Context, req user.Request) (res user.Re
 	logger := log.LoggerFromContext(ctx).Named("CreateUser")
 
 	data := user.Entity{
-		Name:    req.Name,
-		Email:   req.Email,
-		Address: req.Address,
-		Role:    req.Role,
+		Name:     req.Name,
+		Email:    req.Email,
+		Password: req.Password,
+		Address:  req.Address,
+		Role:     req.Role,
 	}
 
 	data.ID, err = s.userRepository.Add(ctx, data)
@@ -110,6 +111,20 @@ func (s *Service) SearchUser(ctx context.Context, req user.Request) (res []user.
 	}
 
 	res = user.ParseFromEntities(data)
+
+	return
+}
+
+func (s *Service) GetUserByEmail(ctx context.Context, email string) (res user.Response, err error) {
+	logger := log.LoggerFromContext(ctx).Named("GetUserByEmail").With(zap.String("email", email))
+
+	data, err := s.userRepository.GetByEmail(ctx, email)
+	if err != nil {
+		logger.Error("failed to get by email", zap.Error(err))
+		return
+	}
+
+	res = user.ParseFromEntity(data)
 
 	return
 }

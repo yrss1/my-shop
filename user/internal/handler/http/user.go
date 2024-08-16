@@ -29,6 +29,7 @@ func (h *UserHandler) Routes(r *gin.RouterGroup) {
 		api.DELETE("/:id", h.delete)
 
 		api.GET("/search", h.search)
+		api.GET("/email", h.getByEmail)
 
 	}
 }
@@ -204,6 +205,23 @@ func (h *UserHandler) search(c *gin.Context) {
 	res, err := h.userService.SearchUser(c, req)
 	if err != nil {
 		response.InternalServerError(c, err)
+		return
+	}
+
+	response.OK(c, res)
+}
+
+func (h *UserHandler) getByEmail(c *gin.Context) {
+	email := c.Query("email")
+
+	res, err := h.userService.GetUserByEmail(c, email)
+	if err != nil {
+		switch {
+		case errors.Is(err, store.ErrorNotFound):
+			response.NotFound(c, err)
+		default:
+			response.InternalServerError(c, err)
+		}
 		return
 	}
 

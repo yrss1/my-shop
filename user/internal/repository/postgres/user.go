@@ -32,11 +32,11 @@ func (r *UserRepository) List(ctx context.Context) (dest []user.Entity, err erro
 
 func (r *UserRepository) Add(ctx context.Context, data user.Entity) (id string, err error) {
 	query := `
-		INSERT INTO users (name, email, address, role) 
-		VALUES ($1, $2, $3, $4) 
+		INSERT INTO users (name, email, password, address, role) 
+		VALUES ($1, $2, $3, $4, $5) 
 		RETURNING id`
 
-	args := []any{data.Name, data.Email, data.Address, data.Role}
+	args := []any{data.Name, data.Email, data.Password, data.Address, data.Role}
 
 	if err = r.db.QueryRowContext(ctx, query, args...).Scan(&id); err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
@@ -132,6 +132,25 @@ func (r *UserRepository) prepareArgs(data user.Entity) (sets []string, args []an
 	if data.Role != nil {
 		args = append(args, data.Role)
 		sets = append(sets, fmt.Sprintf("role=$%d", len(args)))
+	}
+
+	if data.Password != nil {
+		args = append(args, data.Password)
+		sets = append(sets, fmt.Sprintf("password=$%d", len(args)))
+	}
+
+	return
+}
+
+func (r *UserRepository) GetByEmail(ctx context.Context, email string) (dest user.Entity, err error) {
+	query := `SELECT id, name, email, address, role from users where email=$1`
+
+	args := []any{email}
+
+	if err = r.db.GetContext(ctx, &dest, query, args...); err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			err = store.ErrorNotFound
+		}
 	}
 
 	return

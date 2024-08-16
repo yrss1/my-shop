@@ -9,4 +9,5 @@ type Repository interface {
 	Update(ctx context.Context, id string, dest Entity) (err error)
 	Delete(ctx context.Context, id string) (err error)
 	Search(ctx context.Context, data Entity) (dest []Entity, err error)
+	GetByEmail(ctx context.Context, id string) (dest Entity, err error)
 }

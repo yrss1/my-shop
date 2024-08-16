@@ -15,8 +15,9 @@ DO $$
                                              id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
                                              name VARCHAR(100) NOT NULL,
                                              email VARCHAR(100) UNIQUE NOT NULL,
+                                             password VARCHAR(255) NOT NULL,
                                              address VARCHAR(255),
-                                             role VARCHAR(50) NOT NULL
+                                             role VARCHAR(50) DEFAULT 'customer'
         );
 
         CREATE TABLE IF NOT EXISTS products (
@@ -60,11 +61,11 @@ DO $$
         );
 
         -- DATA --
-        INSERT INTO users (name, email, address, role) VALUES
-                                                           ('John Doe', 'john.doe@example.com', '123 Main St, Springfield', 'customer'),
-                                                           ('Jane Smith', 'jane.smith@example.com', '456 Oak St, Metropolis', 'customer'),
-                                                           ('Alice Johnson', 'alice.johnson@example.com', '789 Pine St, Gotham', 'admin'),
-                                                           ('Bob Brown', 'bob.brown@example.com', '101 Maple St, Star City', 'customer');
+        INSERT INTO users (name, email, password, address, role) VALUES
+                                                           ('John Doe', 'john.doe@example.com', '1233','123 Main St, Springfield', 'customer'),
+                                                           ('Jane Smith', 'jane.smith@example.com', '1233','456 Oak St, Metropolis', 'customer'),
+                                                           ('Alice Johnson', 'alice.johnson@example.com', '1233','789 Pine St, Gotham', 'admin'),
+                                                           ('Bob Brown', 'bob.brown@example.com', '1233','101 Maple St, Star City', 'customer');
 
         INSERT INTO products (name, description, price, category, quantity) VALUES
                                                                                 ('Laptop', 'High performance laptop', 999.99, 'Electronics', 10),

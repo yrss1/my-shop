@@ -5,11 +5,12 @@ import (
 )
 
 type Request struct {
-	ID      string  `json:"id"`
-	Name    *string `json:"name"`
-	Email   *string `json:"email"`
-	Address *string `json:"address"`
-	Role    *string `json:"role"`
+	ID       string  `json:"id"`
+	Name     *string `json:"name"`
+	Email    *string `json:"email"`
+	Password *string `json:"password"`
+	Address  *string `json:"address"`
+	Role     *string `json:"role"`
 }
 
 func (s *Request) Validate() error {
@@ -18,16 +19,12 @@ func (s *Request) Validate() error {
 	}
 
 	if s.Email == nil {
-		return errors.New("price: cannot be blank")
+		return errors.New("email: cannot be blank")
 	}
 
-	if s.Address == nil {
-		return errors.New("quantity: cannot be blank")
+	if s.Password == nil {
+		return errors.New("password: cannot be blank")
 	}
-
-	//if s.Role == nil {
-	//	return errors.New("role: cannot be blank")
-	//}
 
 	return nil
 }
@@ -35,7 +32,7 @@ func (s *Request) Validate() error {
 func (s *Request) IsEmpty(check string) error {
 	if check == "update" {
 		if s.Name == nil && s.Email == nil &&
-			s.Address == nil && s.Role == nil {
+			s.Address == nil && s.Role == nil && s.Password == nil {
 			return errors.New("data cannot be blank")
 		}
 	}
@@ -59,11 +56,15 @@ type Response struct {
 
 func ParseFromEntity(data Entity) (res Response) {
 	res = Response{
-		ID:      data.ID,
-		Name:    *data.Name,
-		Email:   *data.Email,
-		Address: *data.Address,
-		Role:    *data.Role,
+		ID:    data.ID,
+		Name:  *data.Name,
+		Email: *data.Email,
+	}
+	if data.Address != nil {
+		res.Address = *data.Address
+	}
+	if data.Role != nil {
+		res.Role = *data.Role
 	}
 	return
 }
