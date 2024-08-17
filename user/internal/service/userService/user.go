@@ -3,9 +3,9 @@ package userService
 import (
 	"context"
 	"errors"
-	"github.com/yrss1/my-shop/tree/main/user/internal/domain/user"
-	"github.com/yrss1/my-shop/tree/main/user/pkg/log"
-	"github.com/yrss1/my-shop/tree/main/user/pkg/store"
+	"github.com/yrss1/my-shop/user/internal/domain/user"
+	"github.com/yrss1/my-shop/user/pkg/log"
+	"github.com/yrss1/my-shop/user/pkg/store"
 	"go.uber.org/zap"
 )
 

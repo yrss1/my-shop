@@ -3,11 +3,11 @@ package http
 import (
 	"errors"
 	"github.com/gin-gonic/gin"
-	"github.com/yrss1/my-shop/tree/main/user/internal/domain/user"
-	"github.com/yrss1/my-shop/tree/main/user/internal/service/userService"
-	"github.com/yrss1/my-shop/tree/main/user/pkg/helpers"
-	"github.com/yrss1/my-shop/tree/main/user/pkg/server/response"
-	"github.com/yrss1/my-shop/tree/main/user/pkg/store"
+	"github.com/yrss1/my-shop/user/internal/domain/user"
+	"github.com/yrss1/my-shop/user/internal/service/userService"
+	"github.com/yrss1/my-shop/user/pkg/helpers"
+	"github.com/yrss1/my-shop/user/pkg/server/response"
+	"github.com/yrss1/my-shop/user/pkg/store"
 )
 
 type UserHandler struct {

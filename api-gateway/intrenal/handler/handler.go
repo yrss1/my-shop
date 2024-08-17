@@ -2,9 +2,9 @@ package handler
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/yrss1/my-shop/tree/main/api-gateway/intrenal/config"
-	"github.com/yrss1/my-shop/tree/main/api-gateway/intrenal/handler/http"
-	"github.com/yrss1/my-shop/tree/main/api-gateway/pkg/server/router"
+	"github.com/yrss1/my-shop/api-gateway/intrenal/config"
+	"github.com/yrss1/my-shop/api-gateway/intrenal/handler/http"
+	"github.com/yrss1/my-shop/api-gateway/pkg/server/router"
 )
 
 type Dependencies struct {

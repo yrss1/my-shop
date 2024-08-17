@@ -1,4 +1,4 @@
-module github.com/yrss1/my-shop/tree/main/order
+module github.com/yrss1/my-shop/order
 
 go 1.22.5
 

@@ -1,6 +1,6 @@
 package main
 
-import "github.com/yrss1/my-shop/tree/main/order/internal/app"
+import "github.com/yrss1/my-shop/order/internal/app"
 
 func main() {
 	app.Run()

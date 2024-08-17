@@ -3,8 +3,8 @@ package http
 import (
 	"bytes"
 	"github.com/gin-gonic/gin"
-	"github.com/yrss1/my-shop/tree/main/api-gateway/intrenal/config"
-	"github.com/yrss1/my-shop/tree/main/api-gateway/pkg/server/response"
+	"github.com/yrss1/my-shop/api-gateway/intrenal/config"
+	"github.com/yrss1/my-shop/api-gateway/pkg/server/response"
 	"io"
 	"net/http"
 )

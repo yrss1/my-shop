@@ -1,6 +1,6 @@
 package userService
 
-import "github.com/yrss1/my-shop/tree/main/user/internal/domain/user"
+import "github.com/yrss1/my-shop/user/internal/domain/user"
 
 type Configuration func(s *Service) error
 

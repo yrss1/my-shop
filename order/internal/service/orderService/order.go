@@ -3,9 +3,9 @@ package orderService
 import (
 	"context"
 	"errors"
-	"github.com/yrss1/my-shop/tree/main/order/internal/domain/order"
-	"github.com/yrss1/my-shop/tree/main/order/pkg/log"
-	"github.com/yrss1/my-shop/tree/main/order/pkg/store"
+	"github.com/yrss1/my-shop/order/internal/domain/order"
+	"github.com/yrss1/my-shop/order/pkg/log"
+	"github.com/yrss1/my-shop/order/pkg/store"
 	"go.uber.org/zap"
 )
 

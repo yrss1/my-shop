@@ -3,11 +3,11 @@ package grpc_handler
 import (
 	"context"
 	"errors"
-	"github.com/yrss1/my-shop/tree/main/user/internal/domain/user"
-	"github.com/yrss1/my-shop/tree/main/user/internal/service/userService"
-	"github.com/yrss1/my-shop/tree/main/user/pb"
-	"github.com/yrss1/my-shop/tree/main/user/pkg/helpers"
-	"github.com/yrss1/my-shop/tree/main/user/pkg/store"
+	pb "github.com/yrss1/my-shop/pkg/pb/user"
+	"github.com/yrss1/my-shop/user/internal/domain/user"
+	"github.com/yrss1/my-shop/user/internal/service/userService"
+	"github.com/yrss1/my-shop/user/pkg/helpers"
+	"github.com/yrss1/my-shop/user/pkg/store"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )

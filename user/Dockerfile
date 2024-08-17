@@ -4,6 +4,8 @@ WORKDIR /build
 
 COPY . /build
 
+COPY ../pkg .
+
 RUN go mod download
 
 COPY . .

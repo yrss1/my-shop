@@ -3,12 +3,12 @@ package http
 import (
 	"errors"
 	"github.com/gin-gonic/gin"
-	"github.com/yrss1/my-shop/tree/main/payment/internal/domain/payment"
-	"github.com/yrss1/my-shop/tree/main/payment/internal/provider/epay"
-	"github.com/yrss1/my-shop/tree/main/payment/internal/service/epayment"
-	"github.com/yrss1/my-shop/tree/main/payment/pkg/helpers"
-	"github.com/yrss1/my-shop/tree/main/payment/pkg/server/response"
-	"github.com/yrss1/my-shop/tree/main/payment/pkg/store"
+	"github.com/yrss1/my-shop/payment/internal/domain/payment"
+	"github.com/yrss1/my-shop/payment/internal/provider/epay"
+	"github.com/yrss1/my-shop/payment/internal/service/epayment"
+	"github.com/yrss1/my-shop/payment/pkg/helpers"
+	"github.com/yrss1/my-shop/payment/pkg/server/response"
+	"github.com/yrss1/my-shop/payment/pkg/store"
 )
 
 type PaymentHandler struct {

@@ -1,6 +1,6 @@
 package productService
 
-import "github.com/yrss1/my-shop/tree/main/product/internal/domain/product"
+import "github.com/yrss1/my-shop/product/internal/domain/product"
 
 type Configuration func(s *Service) error
 

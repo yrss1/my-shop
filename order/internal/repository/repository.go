@@ -1,9 +1,9 @@
 package repository
 
 import (
-	"github.com/yrss1/my-shop/tree/main/order/internal/domain/order"
-	"github.com/yrss1/my-shop/tree/main/order/internal/repository/postgres"
-	"github.com/yrss1/my-shop/tree/main/order/pkg/store"
+	"github.com/yrss1/my-shop/order/internal/domain/order"
+	"github.com/yrss1/my-shop/order/internal/repository/postgres"
+	"github.com/yrss1/my-shop/order/pkg/store"
 )
 
 type Configuration func(r *Repository) error

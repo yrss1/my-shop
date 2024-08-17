@@ -3,9 +3,9 @@ package epayment
 import (
 	"context"
 	"errors"
-	"github.com/yrss1/my-shop/tree/main/payment/internal/domain/payment"
-	"github.com/yrss1/my-shop/tree/main/payment/pkg/log"
-	"github.com/yrss1/my-shop/tree/main/payment/pkg/store"
+	"github.com/yrss1/my-shop/payment/internal/domain/payment"
+	"github.com/yrss1/my-shop/payment/pkg/log"
+	"github.com/yrss1/my-shop/payment/pkg/store"
 	"go.uber.org/zap"
 )
 

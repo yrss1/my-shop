@@ -6,8 +6,8 @@ import (
 	"errors"
 	"fmt"
 	"github.com/jmoiron/sqlx"
-	"github.com/yrss1/my-shop/tree/main/payment/internal/domain/payment"
-	"github.com/yrss1/my-shop/tree/main/payment/pkg/store"
+	"github.com/yrss1/my-shop/payment/internal/domain/payment"
+	"github.com/yrss1/my-shop/payment/pkg/store"
 	"strings"
 )
 

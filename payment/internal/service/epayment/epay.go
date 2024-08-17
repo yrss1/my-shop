@@ -4,7 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"errors"
-	"github.com/yrss1/my-shop/tree/main/payment/internal/provider/epay"
+	"github.com/yrss1/my-shop/payment/internal/provider/epay"
 )
 
 func (s *Service) GetToken(ctx context.Context, req *epay.PaymentRequest) (token string, err error) {

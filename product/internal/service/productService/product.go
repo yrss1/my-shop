@@ -3,9 +3,9 @@ package productService
 import (
 	"context"
 	"errors"
-	"github.com/yrss1/my-shop/tree/main/product/internal/domain/product"
-	"github.com/yrss1/my-shop/tree/main/product/pkg/log"
-	"github.com/yrss1/my-shop/tree/main/product/pkg/store"
+	"github.com/yrss1/my-shop/product/internal/domain/product"
+	"github.com/yrss1/my-shop/product/pkg/log"
+	"github.com/yrss1/my-shop/product/pkg/store"
 	"go.uber.org/zap"
 )
 

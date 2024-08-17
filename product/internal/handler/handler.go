@@ -4,11 +4,11 @@ import (
 	"github.com/gin-gonic/gin"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
-	"github.com/yrss1/my-shop/tree/main/product/docs"
-	"github.com/yrss1/my-shop/tree/main/product/internal/config"
-	"github.com/yrss1/my-shop/tree/main/product/internal/handler/http"
-	"github.com/yrss1/my-shop/tree/main/product/internal/service/productService"
-	"github.com/yrss1/my-shop/tree/main/product/pkg/server/router"
+	"github.com/yrss1/my-shop/product/docs"
+	"github.com/yrss1/my-shop/product/internal/config"
+	"github.com/yrss1/my-shop/product/internal/handler/http"
+	"github.com/yrss1/my-shop/product/internal/service/productService"
+	"github.com/yrss1/my-shop/product/pkg/server/router"
 )
 
 type Dependencies struct {
