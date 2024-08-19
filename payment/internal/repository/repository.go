@@ -35,7 +35,6 @@ func WithPostgresStore(dbName string) Configuration {
 		//if err = store.Migrate(dbName); err != nil {
 		//	return
 		//}
-
 		r.Payment = postgres.NewPaymentRepository(r.postgres.Client)
 
 		return

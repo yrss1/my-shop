@@ -3,7 +3,7 @@ package router
 import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
-	"github.com/yrss1/my-shop/tree/main/user/pkg/server/response"
+	"github.com/yrss1/my-shop/auth/pkg/server/response"
 )
 
 func New() *gin.Engine {

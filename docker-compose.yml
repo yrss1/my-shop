@@ -22,6 +22,7 @@ services:
     container_name: user-service-app
     ports:
       - "${PORT_USER}:${PORT_USER}"
+      - "9004:9004"
     networks:
       - backend
     env_file:

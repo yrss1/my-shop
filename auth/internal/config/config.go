@@ -21,7 +21,7 @@ type (
 	Configs struct {
 		APP      AppConfig
 		POSTGRES StoreConfig
-		EPAY     CredentialsConfig
+		API      APIConfig
 	}
 
 	AppConfig struct {
@@ -35,13 +35,9 @@ type (
 	StoreConfig struct {
 		DSN string
 	}
-	CredentialsConfig struct {
-		URL      string
-		Login    string
-		Password string
 
-		OAuthURL       string
-		PaymentPageURL string
+	APIConfig struct {
+		UserGRPC string
 	}
 )
 
@@ -68,7 +64,7 @@ func New() (cfg Configs, err error) {
 		return
 	}
 
-	if err = envconfig.Process("EPAY", &cfg.EPAY); err != nil {
+	if err = envconfig.Process("API", &cfg.API); err != nil {
 		return
 	}
 

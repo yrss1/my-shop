@@ -2,22 +2,17 @@ package handler
 
 import (
 	"github.com/gin-gonic/gin"
-	swaggerFiles "github.com/swaggo/files"
-	ginSwagger "github.com/swaggo/gin-swagger"
-	"github.com/yrss1/my-shop/tree/main/user/docs"
-	"github.com/yrss1/my-shop/tree/main/user/internal/config"
-	"github.com/yrss1/my-shop/tree/main/user/internal/handler/grpc_handler"
-	"github.com/yrss1/my-shop/tree/main/user/internal/handler/http"
-	"github.com/yrss1/my-shop/tree/main/user/internal/service/shop"
-	pb "github.com/yrss1/my-shop/tree/main/user/pb"
-	"github.com/yrss1/my-shop/tree/main/user/pkg/server/router"
+	"github.com/yrss1/my-shop/auth/internal/config"
+	"github.com/yrss1/my-shop/auth/internal/handler/http"
+	"github.com/yrss1/my-shop/auth/internal/service/authService"
+	"github.com/yrss1/my-shop/auth/pkg/server/router"
 	"google.golang.org/grpc"
 )
 
 type Dependencies struct {
 	Configs config.Configs
 
-	ShopService *shop.Service
+	AuthService *authService.Service
 }
 type Handler struct {
 	dependencies Dependencies
@@ -46,12 +41,12 @@ func WithHTTPHandler() Configuration {
 	return func(h *Handler) (err error) {
 		h.HTTP = router.New()
 
-		docs.SwaggerInfo.BasePath = h.dependencies.Configs.APP.Path
-		h.HTTP.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+		//docs.SwaggerInfo.BasePath = h.dependencies.Configs.APP.Path
+		//h.HTTP.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
-		userHandler := http.NewUserHandler(h.dependencies.ShopService)
+		userHandler := http.NewUserHandler(h.dependencies.AuthService)
 
-		api := h.HTTP.Group("/api/v1/")
+		api := h.HTTP.Group("/api/v1")
 		{
 			userHandler.Routes(api)
 		}
@@ -59,9 +54,9 @@ func WithHTTPHandler() Configuration {
 	}
 }
 
-func WithGRPCHandler() Configuration {
-	return func(h *Handler) (err error) {
-		pb.RegisterUserServiceServer(h.GRPCServer, grpc_handler.NewUserServiceServer(h.dependencies.ShopService))
-		return
-	}
-}
+//func WithGRPCHandler() Configuration {
+//	return func(h *Handler) (err error) {
+//		pb.RegisterUserServiceServer(h.GRPCServer, grpc_handler.NewUserServiceServer(h.dependencies.AuthService))
+//		return
+//	}
+//}

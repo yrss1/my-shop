@@ -4,13 +4,13 @@ import (
 	"github.com/gin-gonic/gin"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
-	pb "github.com/yrss1/my-shop/proto/user"
 	"github.com/yrss1/my-shop/user/docs"
 	"github.com/yrss1/my-shop/user/internal/config"
 	"github.com/yrss1/my-shop/user/internal/handler/grpc_handler"
 	"github.com/yrss1/my-shop/user/internal/handler/http"
 	"github.com/yrss1/my-shop/user/internal/service/userService"
 	"github.com/yrss1/my-shop/user/pkg/server/router"
+	pb "github.com/yrss1/proto-definitions/user"
 	"google.golang.org/grpc"
 )
 

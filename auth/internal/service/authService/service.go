@@ -1,11 +1,13 @@
-package shop
+package authService
 
-import "github.com/yrss1/my-shop/tree/main/user/internal/domain/user"
+import (
+	"github.com/yrss1/my-shop/auth/internal/provider/user"
+)
 
 type Configuration func(s *Service) error
 
 type Service struct {
-	userRepository user.Repository
+	userClient *user.Client
 }
 
 func New(configs ...Configuration) (s *Service, err error) {
@@ -20,9 +22,9 @@ func New(configs ...Configuration) (s *Service, err error) {
 	return
 }
 
-func WithUserRepository(userRepository user.Repository) Configuration {
+func WithUserClient(userClient *user.Client) Configuration {
 	return func(s *Service) error {
-		s.userRepository = userRepository
+		s.userClient = userClient
 		return nil
 	}
 }
