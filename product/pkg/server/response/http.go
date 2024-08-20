@@ -52,6 +52,14 @@ func InternalServerError(c *gin.Context, err error) {
 	c.JSON(http.StatusInternalServerError, h)
 }
 
+func StatusRequestTimeout(c *gin.Context) {
+	h := Object{
+		Message: "timeout",
+		Success: false,
+	}
+	c.JSON(http.StatusRequestTimeout, h)
+}
+
 func MethodNotAllowedMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		allowedMethods := map[string]bool{

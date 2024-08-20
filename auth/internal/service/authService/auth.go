@@ -12,7 +12,7 @@ func (s *Service) GetUserByEmail(ctx context.Context, email string) (res *pb.Use
 
 	res, err = s.userClient.GetUserByEmail(ctx, email)
 	if err != nil {
-		logger.Error("failed to delete by id", zap.Error(err))
+		logger.Error("failed to get by email", zap.Error(err))
 		return
 	}
 

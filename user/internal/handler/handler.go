@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"github.com/gin-contrib/timeout"
 	"github.com/gin-gonic/gin"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
@@ -9,6 +10,7 @@ import (
 	"github.com/yrss1/my-shop/user/internal/handler/grpc_handler"
 	"github.com/yrss1/my-shop/user/internal/handler/http"
 	"github.com/yrss1/my-shop/user/internal/service/userService"
+	"github.com/yrss1/my-shop/user/pkg/server/response"
 	"github.com/yrss1/my-shop/user/pkg/server/router"
 	pb "github.com/yrss1/proto-definitions/user"
 	"google.golang.org/grpc"
@@ -29,8 +31,6 @@ type Configuration func(h *Handler) error
 func New(d Dependencies, configs ...Configuration) (h *Handler, err error) {
 	h = &Handler{
 		dependencies: d,
-		HTTP:         router.New(),
-		GRPCServer:   grpc.NewServer(),
 	}
 
 	for _, cfg := range configs {
@@ -45,6 +45,15 @@ func New(d Dependencies, configs ...Configuration) (h *Handler, err error) {
 func WithHTTPHandler() Configuration {
 	return func(h *Handler) (err error) {
 		h.HTTP = router.New()
+		h.HTTP.Use(timeout.New(
+			timeout.WithTimeout(h.dependencies.Configs.APP.Timeout),
+			timeout.WithHandler(func(ctx *gin.Context) {
+				ctx.Next()
+			}),
+			timeout.WithResponse(func(ctx *gin.Context) {
+				response.StatusRequestTimeout(ctx)
+			}),
+		))
 
 		docs.SwaggerInfo.BasePath = h.dependencies.Configs.APP.Path
 		h.HTTP.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
@@ -61,6 +70,7 @@ func WithHTTPHandler() Configuration {
 
 func WithGRPCHandler() Configuration {
 	return func(h *Handler) (err error) {
+		h.GRPCServer = grpc.NewServer()
 		pb.RegisterUserServiceServer(h.GRPCServer, grpc_handler.NewUserServiceServer(h.dependencies.UserService))
 		return
 	}

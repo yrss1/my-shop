@@ -1,10 +1,12 @@
 package handler
 
 import (
+	"github.com/gin-contrib/timeout"
 	"github.com/gin-gonic/gin"
 	"github.com/yrss1/my-shop/auth/internal/config"
 	"github.com/yrss1/my-shop/auth/internal/handler/http"
 	"github.com/yrss1/my-shop/auth/internal/service/authService"
+	"github.com/yrss1/my-shop/auth/pkg/server/response"
 	"github.com/yrss1/my-shop/auth/pkg/server/router"
 	"google.golang.org/grpc"
 )
@@ -25,7 +27,6 @@ func New(d Dependencies, configs ...Configuration) (h *Handler, err error) {
 	h = &Handler{
 		dependencies: d,
 		HTTP:         router.New(),
-		GRPCServer:   grpc.NewServer(),
 	}
 
 	for _, cfg := range configs {
@@ -40,13 +41,22 @@ func New(d Dependencies, configs ...Configuration) (h *Handler, err error) {
 func WithHTTPHandler() Configuration {
 	return func(h *Handler) (err error) {
 		h.HTTP = router.New()
+		h.HTTP.Use(timeout.New(
+			timeout.WithTimeout(h.dependencies.Configs.APP.Timeout),
+			timeout.WithHandler(func(ctx *gin.Context) {
+				ctx.Next()
+			}),
+			timeout.WithResponse(func(ctx *gin.Context) {
+				response.StatusRequestTimeout(ctx)
+			}),
+		))
 
 		//docs.SwaggerInfo.BasePath = h.dependencies.Configs.APP.Path
 		//h.HTTP.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 		userHandler := http.NewUserHandler(h.dependencies.AuthService)
 
-		api := h.HTTP.Group("/api/v1")
+		api := h.HTTP.Group(h.dependencies.Configs.APP.Path)
 		{
 			userHandler.Routes(api)
 		}
@@ -56,6 +66,7 @@ func WithHTTPHandler() Configuration {
 
 //func WithGRPCHandler() Configuration {
 //	return func(h *Handler) (err error) {
+//		h.GRPCServer = grpc.NewServer()
 //		pb.RegisterUserServiceServer(h.GRPCServer, grpc_handler.NewUserServiceServer(h.dependencies.AuthService))
 //		return
 //	}
